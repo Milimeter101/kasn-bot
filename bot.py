@@ -6,11 +6,14 @@ from aiogram.filters import Command
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from aiohttp import web
 
-# Render ရဲ့ Environment ထဲက Token ကို ယူသုံးခြင်း
+# Render ရဲ့ Environment ထဲက Token ယူသုံးခြင်း
 TOKEN = os.getenv("TOKEN")
 
 # သင့်ရဲ့ Telegram Admin ID
 ADMIN_ID = 1861529838
+
+# ⚠️ ဝင်ရမည့် VIP Channel ရဲ့ ID သို့မဟုတ် Username (ဥပမာ - "-100xxxxxxxxxx")
+VIP_CHANNEL_ID = "-100xxxxxxxxxx"  # ← သင့် VIP Channel ID ကို ဒီမှာ ထည့်ပါ
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
@@ -38,7 +41,7 @@ async def cmd_start(message: Message):
     await message.answer(text=welcome_text, reply_markup=get_main_menu())
 
 
-# --- ၁။ ခလုတ်များ နှိပ်လိုက်သည့်အခါ အချက်အလက်များ ပြသခြင်း ---
+# --- ခလုတ်များ နှိပ်လိုက်သည့်အခါ အချက်အလက်များ ပြသခြင်း ---
 
 @dp.callback_query(F.data == "free_movies")
 async def process_free_movies(callback: CallbackQuery):
@@ -54,7 +57,7 @@ async def process_free_movies(callback: CallbackQuery):
 async def process_online_class(callback: CallbackQuery):
     class_text = (
         "မင်္ဂလာပါခင်ဗျာ။ စိတ်ဝင်စားပေးလို့ ကျေးဇူးပါဗျ။ "
-        "ဒီသင်တန်းလေးကတော့ Telegram မှာ Movie Channel ထောင်ပြီး TikTok ကနေ လူခေါ်တာ၊ ကြော်ငြာလက်ခံပြီး ဝင်ငွေရှာတဲ့အထိ အစအဆုံး သင်ပေးထားတဲ့ Video Class လေးပါဗျ။\n\n"
+        "ဒီသင်တန်းလေးကတော့ Telegram မှာ Movie Channel ထောင်ပြီး TikTok ကနေ လူခေါ်တာ၊ ကြော်ငြာလက်ခံပြီး ဝင်ငွေရှာတဲ့အထိ အစအဆုံး သင်ပေးထားတဲ့ Video Class လေးပါဗျ。\n\n"
         "သင်တန်းကြေးကတော့ ၃၅,၀၀၀ ကျပ် ပဲ ကျသင့်မှာဖြစ်ပြီး အချိန်အကန့်အသတ်မရှိ လေ့လာနိုင်ပါတယ်။\n\n"
         "သင်တန်းအပ်နှံလိုပါက Admin သို့ ဆက်သွယ်နိုင်ပါသည် -\n"
         "👉 @milimeterz"
@@ -65,7 +68,7 @@ async def process_online_class(callback: CallbackQuery):
 @dp.callback_query(F.data == "vip_channel")
 async def process_vip_channel(callback: CallbackQuery):
     vip_text = (
-        "မန်ဘာဝင်ရတာပါအကို series တေက ကျန်တာတေက မလိုပါဘူးဗျ မန်ဘာကြေးကသတ်မှတ်ထားတာမရှိဘဲ...\n\n"
+        "မန်ဘာဝင်ရတာပါအကို series tေက ကျန်တာတေက မလိုပါဘူးဗျ မန်ဘာကြေးကသတ်မှတ်ထားတာမရှိဘဲ...\n\n"
         "5000 က စလို့ စေတနာရှိသလောက် အက်မင်ကို Support ပေးလို့ရပါတယ်..တစ်ခါသွင်းထားရုံနဲ့ ချန်နယ်မပျက်မချင်း အကျုံးဝင်ပါတယ်...\n\n"
         "🤩 **Wave** - 09448835260\n"
         "🤩 **Name** - Kaung Si Thu\n\n"
@@ -110,9 +113,13 @@ async def process_ads_inquiry(callback: CallbackQuery):
         "@onlyin18kasn\n"
         "@fullkarkyichilar\n"
         "@allkarkyimalar\n"
-        "@pornworldkasn1\n\n"
+        "@pornworldkasn1\n"
+        "@kasnmoviewworld\n"
+        "@kasnreviews1\n"
+        "@kasnreviews3\n\n"
         "https://t.me/+jS8kwg4rG1ZkYWU1\n"
         "https://t.me/+ngM9sYGvAU44NDA1\n"
+        "https://t.me/+CN0BI4DqMPsyNDk1\n"
         "https://t.me/+laf6oHxHWklmMzE1\n"
         "https://t.me/+GsVFKMJiHjJjMzE9\n"
         "https://t.me/+xK8FCmgVEd5kZWNl\n"
@@ -139,7 +146,7 @@ async def process_ads_inquiry(callback: CallbackQuery):
     await callback.answer()
 
 
-# --- ၂။ User တွေက ငွေလွဲပြေစာ (Photo) ပို့လိုက်ရင် Admin (1861529838) ဆီ အလိုအလျောက် ပို့ပေးမည့်စနစ် ---
+# --- 📸 User တွေ ငွေလွဲပြေစာပို့ရင် Admin ဆီကို အတည်ပြုရန် ခလုတ်ပါ ပို့ပေးခြင်း ---
 @dp.message(F.photo)
 async def handle_payment_screenshot(message: Message):
     user = message.from_user
@@ -148,27 +155,83 @@ async def handle_payment_screenshot(message: Message):
                 f"🔗 **Username:** @{user.username if user.username else 'None'}\n" \
                 f"🆔 **User ID:** `{user.id}`"
 
+    # အတည်ပြုရန် ခလုတ် (Approve Button)
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="✅ ငွေမှန်သည် (Approve & Add to Channel)", callback_data=f"approve_{user.id}")]
+        ]
+    )
+
     try:
         await bot.send_photo(
             chat_id=ADMIN_ID,
             photo=message.photo[-1].file_id,
             caption=user_info,
+            reply_markup=keyboard,
             parse_mode="Markdown"
         )
-        await message.answer("ကျေးဇူးတင်ပါတယ်ခင်ဗျာ 🙏 ငွေလွဲပြေစာကို Admin ထံသို့ ပို့ပေးလိုက်ပါပြီ။ Admin မှ စစ်ဆေးပြီး လိုအပ်တာတွေကို ဆက်လက်ဆောင်ရွက်ပေးပါမည်။")
+        await message.answer("ကျေးဇူးတင်ပါတယ်ခင်ဗျာ 🙏 ငွေလွဲပြေစာကို Admin ထံသို့ ပို့ပေးလိုက်ပါပြီ။ Admin မှ စစ်ဆေးပြီးပါက ချန်နယ်လင့်ခ် ပို့ပေးပါမည်။")
     except Exception as e:
         await message.answer("ပြေစာပို့ရာတွင် အခက်အခဲရှိနေပါသည်။ ကျေးဇူးပြု၍ Admin ကို တိုက်ရိုက်ဆက်သွယ်ပေးပါ (@milimeterz)။")
 
 
-# --- ၃။ စာနဲ့ လာမေးရင် အလိုအလျောက် ပြန်ဖြေမည့် စနစ် (Auto-Reply / FAQ) ---
+# --- ✅ Admin က 'ငွေမှန်သည်' ခလုတ်ကို နှိပ်လိုက်သည့်အခါ ---
+@dp.callback_query(F.data.startswith("approve_"))
+async def process_approve(callback: CallbackQuery):
+    target_user_id = int(callback.data.split("_")[1])
 
-@dp.message(F.text.lower().contains("price") | F.text.lower().contains("ဈေး") | F.text.lower().contains("သင်တန်း") | F.text.lower().contains("ဖိုး"))
-async def reply_price(message: Message):
-    await message.answer("💰 Online Class သို့မဟုတ် VIP Channel နှင့် ပတ်သက်သော အချက်အလက်များကို သိရှိလိုပါက Menu ထဲမှ သက်ဆိုင်ရာ ခလုတ်ကို နှိပ်၍ ကြည့်ရှုနိုင်ပါတယ်ခင်ဗျာ။")
+    try:
+        # ၁။ User ကို VIP Channel ထဲ ဝင်ရန် Single-use Invite Link ထုတ်ပေးခြင်း
+        invite_link = await bot.create_chat_invite_link(
+            chat_id=VIP_CHANNEL_ID,
+            member_limit=1  # တစ်ယောက်ပဲ ဝင်လို့ရမည့် Link
+        )
 
-@dp.message(F.text.lower().contains("admin") | F.text.lower().contains("ဆက်သွယ်") | F.text.lower().contains("လူကြီးမင်း"))
-async def reply_contact(message: Message):
-    await message.answer("💬 Admin ကို ဆက်သွယ်လိုပါက @milimeterz သို့ တိုက်ရိုက် စာပို့နိုင်ပါတယ်။")
+        # ၂။ User ဆီသို့ အောင်မြင်ကြောင်းနှင့် ချန်နယ်လင့်ခ် ပို့ပေးခြင်း
+        await bot.send_message(
+            chat_id=target_user_id,
+            text=f"🎉 **သင်၏ ငွေလွဲပြေစာ အတည်ပြုပြီးပါပြီ!**\n\n"
+                 f"VIP Channel သို့ ဝင်ရောက်ရန် အောက်ပါလင့်ခ်ကို နှိပ်ပါ (ဤလင့်ခ်သည် သင်တစ်ဦးတည်းအတွက်သာ ဖြစ်ပါသည်) -\n"
+                 f"👉 {invite_link.invite_link}"
+        )
+
+        # ၃။ Admin ဘက်က မူလ ပုံပေါ်က ခလုတ်ကို အတည်ပြုပြီးကြောင်း ပြောင်းလဲပြသရန်
+        await callback.message.edit_caption(
+            caption=callback.message.caption + "\n\n✅ **[အတည်ပြုပြီး & ချန်နယ်လင့်ခ် ပို့ပြီးပါပြီ]**",
+            parse_mode="Markdown"
+        )
+        await callback.answer("✅ User ထံသို့ ချန်နယ်လင့်ခ် အောင်မြင်စွာ ပို့ပြီးပါပြီ။")
+
+    except Exception as e:
+        await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
+
+
+# --- 🔄 Admin ဘက်ကနေ ရိုးရိုး Reply လုပ်ပြီး စာပြန်ချင်ရင် သုံးရန် ---
+@dp.message(F.from_user.id == ADMIN_ID)
+async def admin_reply_handler(message: Message):
+    if message.reply_to_message and message.reply_to_message.caption:
+        caption = message.reply_to_message.caption
+        try:
+            if "User ID:" in caption:
+                lines = caption.split("\n")
+                target_user_id = None
+                for line in lines:
+                    if "User ID:" in line:
+                        target_user_id = line.split("`")[1]
+                        break
+                
+                if target_user_id:
+                    await bot.send_message(
+                        chat_id=int(target_user_id),
+                        text=f"💬 **Admin မှ ပြောကြားချက်:**\n\n{message.text}"
+                    )
+                    await message.reply("✅ User ထံသို့ စာပို့ပြီးပါပြီ။")
+                    return
+        except Exception as e:
+            await message.reply(f"❌ ပို့၍မရပါ။ အမှားအယွင်းရှိနေပါသည်: {e}")
+            return
+            
+    await message.reply("💡 User ဆီ စာပြန်လိုပါက ပုံအောက်ပါ **'✅ ငွေမှန်သည်'** ခလုတ်ကို နှိပ်ပါ (သို့မဟုတ်) ပုံကို Reply လုပ်၍ စာပို့ပါ။")
 
 
 # --- Render အတွက် Fake Web Server (Port 10000) ---
