@@ -250,7 +250,8 @@ async def main():
     print("Bot and Web Server are running...")
     
     await web_server()
-    await dp.start_polling(bot)
+    # ⚠️ drop_pending_updates=True ထည့်သွင်းခြင်းဖြင့် ဟောင်းနေသော conflict များကို ရှင်းထုတ်ပေးပါမည်
+    await dp.start_polling(bot, drop_pending_updates=True)
 
 if __name__ == "__main__":
     asyncio.run(main())
