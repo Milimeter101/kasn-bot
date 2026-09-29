@@ -68,15 +68,15 @@ async def process_online_class(callback: CallbackQuery):
 @dp.callback_query(F.data == "vip_channel")
 async def process_vip_channel(callback: CallbackQuery):
     vip_text = (
-        "မန်ဘာဝင်ရတာပါအကို series tေက ကျန်တာတေက မလိုပါဘူးဗျ မန်ဘာကြေးကသတ်မှတ်ထားတာမရှိဘဲ...\n\n"
+        "မန်ဘာဝင်ရတာပါအကို series တွေက ကျန်တာတွေက မလိုပါဘူးဗျ မန်ဘာကြေးကသတ်မှတ်ထားတာမရှိဘဲ...\n\n"
         "5000 က စလို့ စေတနာရှိသလောက် အက်မင်ကို Support ပေးလို့ရပါတယ်..တစ်ခါသွင်းထားရုံနဲ့ ချန်နယ်မပျက်မချင်း အကျုံးဝင်ပါတယ်...\n\n"
         "🤩 **Wave** - 09448835260\n"
         "🤩 **Name** - Kaung Si Thu\n\n"
         "🤩 **Kpay** - 09752828949\n"
         "🤩 **Name** - Aye Sandar Moe\n\n"
-        "Note မှာ Shop တစ်ခုထည်းသာရေးပေးပါ ✅\n\n"
+        "Note မှာ Shop တစ်ခုတည်းသာရေးပေးပါ ✅\n\n"
         "📌 ဒီ Ph no တွေသာ သုံးပါတယ်။\n"
-        "📌 ငွေလွဲးပီး ပြေစာ တစ်ခါထည်း ပို့ထားပေးပါခင်ဗျာ ။\n\n"
+        "📌 ငွေလွဲပြီး ပြေစာ တစ်ခါတည်း ပို့ထားပေးပါခင်ဗျာ ။\n\n"
         "**ဆက်သွယ်ရန်** 👇👇\n"
         "@milimeterz\n"
         "@AS273152\n\n"
@@ -171,34 +171,34 @@ async def handle_payment_screenshot(message: Message):
         )
         await message.answer("ကျေးဇူးတင်ပါတယ်ခင်ဗျာ 🙏 ငွေလွဲပြေစာကို Admin ထံသို့ ပို့ပေးလိုက်ပါပြီ။ Admin မှ စစ်ဆေးပြီးပါက ချန်နယ်လင့်ခ် ပို့ပေးပါမည်။")
     except Exception as e:
-        # ⚠️ Error အသေးစိတ်ကို Render Logs ထဲမှာ ထင်ရှားစွာ ပေါ်လာစေရန်
         print(f"ERROR: Failed to handle photo from user {user.id} ({user.full_name}): {e}")
         await message.answer("ပြေစာပို့ရာတွင် အခက်အခဲရှိနေပါသည်။ ကျေးဇူးပြု၍ Admin ကို တိုက်ရိုက်ဆက်သွယ်ပေးပါ (@milimeterz)။")
 
 
-# --- ✅ Admin က 'ငွေမှန်သည်' ခလုတ်ကို နှိပ်လိုက်သည့်အခါ ---
+# --- ✅ Admin က 'ငွေမှန်သည်' ခလုတ်ကို နှိပ်လိုက်သည့်အခါ (Admin Approval လိုအပ်သော လင့်ခ်ထုတ်ပေးခြင်း) ---
 @dp.callback_query(F.data.startswith("approve_"))
 async def process_approve(callback: CallbackQuery):
     target_user_id = int(callback.data.split("_")[1])
 
     try:
+        # creates_join_request=True ဖြင့် Admin ၏ Join Request အတည်ပြုချက်လိုအပ်သော လင့်ခ်ဖန်တီးခြင်း
         invite_link = await bot.create_chat_invite_link(
             chat_id=VIP_CHANNEL_ID,
-            member_limit=1
+            creates_join_request=True
         )
 
         await bot.send_message(
             chat_id=target_user_id,
             text=f"🎉 **သင်၏ ငွေလွဲပြေစာ အတည်ပြုပြီးပါပြီ!**\n\n"
-                 f"VIP Channel သို့ ဝင်ရောက်ရန် အောက်ပါလင့်ခ်ကို နှိပ်ပါ (ဤလင့်ခ်သည် သင်တစ်ဦးတည်းအတွက်သာ ဖြစ်ပါသည်) -\n"
+                 f"VIP Channel သို့ ဝင်ရောက်ရန် အောက်ပါလင့်ခ်ကို နှိပ်ပြီး Join Request တင်ပေးပါ (Admin မှ စစ်ဆေးအတည်ပြုပေးပါမည်) -\n"
                  f"👉 {invite_link.invite_link}"
         )
 
         await callback.message.edit_caption(
-            caption=callback.message.caption + "\n\n✅ **[အတည်ပြုပြီး & ချန်နယ်လင့်ခ် ပို့ပြီးပါပြီ]**",
+            caption=callback.message.caption + "\n\n✅ **[အတည်ပြုပြီး & Join Request လင့်ခ် ပို့ပြီးပါပြီ]**",
             parse_mode="Markdown"
         )
-        await callback.answer("✅ User ထံသို့ ချန်နယ်လင့်ခ် အောင်မြင်စွာ ပို့ပြီးပါပြီ။")
+        await callback.answer("✅ User ထံသို့ Admin Approval လင့်ခ် အောင်မြင်စွာ ပို့ပြီးပါပြီ။")
 
     except Exception as e:
         print(f"ERROR: Failed to approve user {target_user_id}: {e}")
