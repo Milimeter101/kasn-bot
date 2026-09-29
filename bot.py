@@ -4,6 +4,7 @@ import os
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import Command
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from aiohttp import web
 
 # Render ရဲ့ Environment ထဲက Token ကို ယူသုံးခြင်း
 TOKEN = os.getenv("TOKEN")
@@ -11,6 +12,7 @@ TOKEN = os.getenv("TOKEN")
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
+# ပင်မ Menu ခလုတ် ၅ ခု
 def get_main_menu():
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
@@ -57,9 +59,29 @@ async def process_ads_inquiry(callback: callback_query):
     await callback.message.answer("📢 ကြော်ငြာလက်ခံခြင်းဆိုင်ရာ နှုန်းထားများနှင့် စည်းကမ်းချက်များ - [Ads Rates & Rules]")
     await callback.answer()
 
+
+# --- Render အတွက် Fake Web Server (Port ဖွင့်ပေးရန်) ---
+async def handle(request):
+    return web.Response(text="Bot is running!")
+
+app = web.Application()
+app.router.add_get("/", handle)
+
+async def web_server():
+    runner = web.AppRunner(app)
+    await runner.setup()
+    # Render က သတ်မှတ်ပေးတဲ့ Port 10000 ကို သုံးပါတယ်
+    site = web.TCPSite(runner, "0.0.0.0", 10000)
+    await site.start()
+
+
+# --- Main Function ---
 async def main():
     logging.basicConfig(level=logging.INFO)
-    print("Bot is running...")
+    print("Bot and Web Server are running...")
+    
+    # Web Server နဲ့ Telegram Bot ကို တစ်ပြိုင်တည်း စတင် Run မည်
+    await web_server()
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
