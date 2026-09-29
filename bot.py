@@ -81,9 +81,7 @@ async def process_vip_channel(callback: CallbackQuery):
         "Note မှာ Shop တစ်ခုတည်းသာရေးပေးပါ ✅\n\n"
         "📌 ဒီ Ph no တွေသာ သုံးပါတယ်။\n"
         "📌 ငွေလွဲပြီး ပြေစာ တစ်ခါတည်း ပို့ထားပေးပါခင်ဗျာ ။\n\n"
-        "**ဆက်သွယ်ရန်** 👇👇\n"
-        "@milimeterz\n"
-        "@AS273152\n\n"
+      
         "**လက်ရှိတင်ထားပြီးသား ဇာတ်လမ်းတွဲစာရင်းကြည့်ရန်**👇👇👇\n"
         "https://t.me/kasnseries/711"
     )
