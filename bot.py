@@ -12,8 +12,8 @@ TOKEN = os.getenv("TOKEN")
 # သင့်ရဲ့ Telegram Admin ID
 ADMIN_ID = 1861529838
 
-# ⚠️ ဝင်ရမည့် VIP Channel ရဲ့ ID သို့မဟုတ် Username (ဥပမာ - "-100xxxxxxxxxx")
-VIP_CHANNEL_ID = "-100xxxxxxxxxx"  # ← သင့် VIP Channel ID ကို ဒီမှာ ထည့်ပါ
+# ⚠️ ဝင်ရမည့် VIP Channel ID အမှန်
+VIP_CHANNEL_ID = "-1002535791299"
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
@@ -57,7 +57,7 @@ async def process_free_movies(callback: CallbackQuery):
 async def process_online_class(callback: CallbackQuery):
     class_text = (
         "မင်္ဂလာပါခင်ဗျာ။ စိတ်ဝင်စားပေးလို့ ကျေးဇူးပါဗျ။ "
-        "ဒီသင်တန်းလေးကတော့ Telegram မှာ Movie Channel ထောင်ပြီး TikTok ကနေ လူခေါ်တာ၊ ကြော်ငြာလက်ခံပြီး ဝင်ငွေရှာတဲ့အထိ အစအဆုံး သင်ပေးထားတဲ့ Video Class လေးပါဗျ。\n\n"
+        "ဒီသင်တန်းလေးကတော့ Telegram မှာ Movie Channel ထောင်ပြီး TikTok ကနေ လူခေါ်တာ၊ ကြော်ငြာလက်ခံပြီး ဝင်ငွေရှာတဲ့အထိ အစအဆုံး သင်ပေးထားတဲ့ Video Class လေးပါဗျ။\n\n"
         "သင်တန်းကြေးကတော့ ၃၅,၀၀၀ ကျပ် ပဲ ကျသင့်မှာဖြစ်ပြီး အချိန်အကန့်အသတ်မရှိ လေ့လာနိုင်ပါတယ်။\n\n"
         "သင်တန်းအပ်နှံလိုပါက Admin သို့ ဆက်သွယ်နိုင်ပါသည် -\n"
         "👉 @milimeterz"
@@ -68,7 +68,7 @@ async def process_online_class(callback: CallbackQuery):
 @dp.callback_query(F.data == "vip_channel")
 async def process_vip_channel(callback: CallbackQuery):
     vip_text = (
-        "မန်ဘာဝင်ရတာပါအကို series tေက ကျန်တာတေက မလိုပါဘူးဗျ မန်ဘာကြေးကသတ်မှတ်ထားတာမရှိဘဲ...\n\n"
+        "မန်ဘာဝင်ရတာပါအကို series တေက ကျန်တာတေက မလိုပါဘူးဗျ မန်ဘာကြေးကသတ်မှတ်ထားတာမရှိဘဲ...\n\n"
         "5000 က စလို့ စေတနာရှိသလောက် အက်မင်ကို Support ပေးလို့ရပါတယ်..တစ်ခါသွင်းထားရုံနဲ့ ချန်နယ်မပျက်မချင်း အကျုံးဝင်ပါတယ်...\n\n"
         "🤩 **Wave** - 09448835260\n"
         "🤩 **Name** - Kaung Si Thu\n\n"
@@ -155,7 +155,6 @@ async def handle_payment_screenshot(message: Message):
                 f"🔗 **Username:** @{user.username if user.username else 'None'}\n" \
                 f"🆔 **User ID:** `{user.id}`"
 
-    # အတည်ပြုရန် ခလုတ် (Approve Button)
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             [InlineKeyboardButton(text="✅ ငွေမှန်သည် (Approve & Add to Channel)", callback_data=f"approve_{user.id}")]
@@ -181,13 +180,11 @@ async def process_approve(callback: CallbackQuery):
     target_user_id = int(callback.data.split("_")[1])
 
     try:
-        # ၁။ User ကို VIP Channel ထဲ ဝင်ရန် Single-use Invite Link ထုတ်ပေးခြင်း
         invite_link = await bot.create_chat_invite_link(
             chat_id=VIP_CHANNEL_ID,
-            member_limit=1  # တစ်ယောက်ပဲ ဝင်လို့ရမည့် Link
+            member_limit=1
         )
 
-        # ၂။ User ဆီသို့ အောင်မြင်ကြောင်းနှင့် ချန်နယ်လင့်ခ် ပို့ပေးခြင်း
         await bot.send_message(
             chat_id=target_user_id,
             text=f"🎉 **သင်၏ ငွေလွဲပြေစာ အတည်ပြုပြီးပါပြီ!**\n\n"
@@ -195,7 +192,6 @@ async def process_approve(callback: CallbackQuery):
                  f"👉 {invite_link.invite_link}"
         )
 
-        # ၃။ Admin ဘက်က မူလ ပုံပေါ်က ခလုတ်ကို အတည်ပြုပြီးကြောင်း ပြောင်းလဲပြသရန်
         await callback.message.edit_caption(
             caption=callback.message.caption + "\n\n✅ **[အတည်ပြုပြီး & ချန်နယ်လင့်ခ် ပို့ပြီးပါပြီ]**",
             parse_mode="Markdown"
