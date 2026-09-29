@@ -9,6 +9,9 @@ from aiohttp import web
 # Render ရဲ့ Environment ထဲက Token ကို ယူသုံးခြင်း
 TOKEN = os.getenv("TOKEN")
 
+# သင့်ရဲ့ Telegram Admin ID
+ADMIN_ID = 1861529838
+
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
@@ -18,7 +21,7 @@ def get_main_menu():
         inline_keyboard=[
             [InlineKeyboardButton(text="🎬 Free Movie Channels များကို ဝင်ရန်", callback_data="free_movies")],
             [InlineKeyboardButton(text="📚 Online Class တက်ရောက်ရန်", callback_data="online_class")],
-            [InlineKeyboardButton(text="💎 Series VIP Channel သို့ ဝင်ရောက်ရန်", callback_data="vip_channel")],
+            [InlineKeyboardButton(text="💎 VIP Channel သို့ ဝင်ရောက်ရန်", callback_data="vip_channel")],
             [InlineKeyboardButton(text="💬 ဆက်သွယ်ရန် / Admin သို့ စကားပြောရန်", callback_data="contact_admin")],
             [InlineKeyboardButton(text="📢 ကြော်ငြာကိစ္စဆွေးနွေးရန်", callback_data="ads_inquiry")]
         ]
@@ -136,7 +139,28 @@ async def process_ads_inquiry(callback: CallbackQuery):
     await callback.answer()
 
 
-# --- ၂. User တွေက စာနဲ့ လာမေးရင် အလိုအလျောက် ပြန်ဖြေမည့် စနစ် ---
+# --- ၂။ User တွေက ငွေလွဲပြေစာ (Photo) ပို့လိုက်ရင် Admin (1861529838) ဆီ အလိုအလျောက် ပို့ပေးမည့်စနစ် ---
+@dp.message(F.photo)
+async def handle_payment_screenshot(message: Message):
+    user = message.from_user
+    user_info = f"📩 **ငွေလွဲပြေစာ အသစ်ရောက်ရှိပါပြီ!**\n\n" \
+                f"👤 **အမည်:** {user.full_name}\n" \
+                f"🔗 **Username:** @{user.username if user.username else 'None'}\n" \
+                f"🆔 **User ID:** `{user.id}`"
+
+    try:
+        await bot.send_photo(
+            chat_id=ADMIN_ID,
+            photo=message.photo[-1].file_id,
+            caption=user_info,
+            parse_mode="Markdown"
+        )
+        await message.answer("ကျေးဇူးတင်ပါတယ်ခင်ဗျာ 🙏 ငွေလွဲပြေစာကို Admin ထံသို့ ပို့ပေးလိုက်ပါပြီ။ Admin မှ စစ်ဆေးပြီး လိုအပ်တာတွေကို ဆက်လက်ဆောင်ရွက်ပေးပါမည်။")
+    except Exception as e:
+        await message.answer("ပြေစာပို့ရာတွင် အခက်အခဲရှိနေပါသည်။ ကျေးဇူးပြု၍ Admin ကို တိုက်ရိုက်ဆက်သွယ်ပေးပါ (@milimeterz)။")
+
+
+# --- ၃။ စာနဲ့ လာမေးရင် အလိုအလျောက် ပြန်ဖြေမည့် စနစ် (Auto-Reply / FAQ) ---
 
 @dp.message(F.text.lower().contains("price") | F.text.lower().contains("ဈေး") | F.text.lower().contains("သင်တန်း") | F.text.lower().contains("ဖိုး"))
 async def reply_price(message: Message):
