@@ -68,7 +68,7 @@ async def process_online_class(callback: CallbackQuery):
 @dp.callback_query(F.data == "vip_channel")
 async def process_vip_channel(callback: CallbackQuery):
     vip_text = (
-        "မန်ဘာဝင်ရတာပါအကို series တေက ကျန်တာတေက မလိုပါဘူးဗျ မန်ဘာကြေးကသတ်မှတ်ထားတာမရှိဘဲ...\n\n"
+        "မန်ဘာဝင်ရတာပါအကို series tေက ကျန်တာတေက မလိုပါဘူးဗျ မန်ဘာကြေးကသတ်မှတ်ထားတာမရှိဘဲ...\n\n"
         "5000 က စလို့ စေတနာရှိသလောက် အက်မင်ကို Support ပေးလို့ရပါတယ်..တစ်ခါသွင်းထားရုံနဲ့ ချန်နယ်မပျက်မချင်း အကျုံးဝင်ပါတယ်...\n\n"
         "🤩 **Wave** - 09448835260\n"
         "🤩 **Name** - Kaung Si Thu\n\n"
@@ -171,6 +171,8 @@ async def handle_payment_screenshot(message: Message):
         )
         await message.answer("ကျေးဇူးတင်ပါတယ်ခင်ဗျာ 🙏 ငွေလွဲပြေစာကို Admin ထံသို့ ပို့ပေးလိုက်ပါပြီ။ Admin မှ စစ်ဆေးပြီးပါက ချန်နယ်လင့်ခ် ပို့ပေးပါမည်။")
     except Exception as e:
+        # ⚠️ Error အသေးစိတ်ကို Render Logs ထဲမှာ ထင်ရှားစွာ ပေါ်လာစေရန်
+        print(f"ERROR: Failed to handle photo from user {user.id} ({user.full_name}): {e}")
         await message.answer("ပြေစာပို့ရာတွင် အခက်အခဲရှိနေပါသည်။ ကျေးဇူးပြု၍ Admin ကို တိုက်ရိုက်ဆက်သွယ်ပေးပါ (@milimeterz)။")
 
 
@@ -199,6 +201,7 @@ async def process_approve(callback: CallbackQuery):
         await callback.answer("✅ User ထံသို့ ချန်နယ်လင့်ခ် အောင်မြင်စွာ ပို့ပြီးပါပြီ။")
 
     except Exception as e:
+        print(f"ERROR: Failed to approve user {target_user_id}: {e}")
         await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
 
 
@@ -224,6 +227,7 @@ async def admin_reply_handler(message: Message):
                     await message.reply("✅ User ထံသို့ စာပို့ပြီးပါပြီ။")
                     return
         except Exception as e:
+            print(f"ERROR: Admin reply failed: {e}")
             await message.reply(f"❌ ပို့၍မရပါ။ အမှားအယွင်းရှိနေပါသည်: {e}")
             return
             
@@ -250,7 +254,6 @@ async def main():
     print("Bot and Web Server are running...")
     
     await web_server()
-    # ⚠️ drop_pending_updates=True ထည့်သွင်းခြင်းဖြင့် ဟောင်းနေသော conflict များကို ရှင်းထုတ်ပေးပါမည်
     await dp.start_polling(bot, drop_pending_updates=True)
 
 if __name__ == "__main__":
