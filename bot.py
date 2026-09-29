@@ -12,13 +12,14 @@ TOKEN = os.getenv("TOKEN")
 # သင့်ရဲ့ Telegram Admin ID
 ADMIN_ID = 1861529838
 
-# ⚠️ ဝင်ရမည့် VIP Channel ID အမှန်
+# ချန်နယ် ID များ
 VIP_CHANNEL_ID = "-1002535791299"
+ONLINE_CLASS_CHANNEL_ID = "-1002667237249"
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-# ပင်မ Menu ခလုတ် ၅ ခု
+# ပင်မ Menu ခလုတ်များ
 def get_main_menu():
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
@@ -56,11 +57,14 @@ async def process_free_movies(callback: CallbackQuery):
 @dp.callback_query(F.data == "online_class")
 async def process_online_class(callback: CallbackQuery):
     class_text = (
-        "မင်္ဂလာပါခင်ဗျာ။ စိတ်ဝင်စားပေးလို့ ကျေးဇူးပါဗျ။ "
+        "မင်္ဂလာပါခင်ဗျာ။ စိတ်ဝင်စားပေးလို့ ကျေးဇူးပါဗျ။\n\n"
         "ဒီသင်တန်းလေးကတော့ Telegram မှာ Movie Channel ထောင်ပြီး TikTok ကနေ လူခေါ်တာ၊ ကြော်ငြာလက်ခံပြီး ဝင်ငွေရှာတဲ့အထိ အစအဆုံး သင်ပေးထားတဲ့ Video Class လေးပါဗျ။\n\n"
-        "သင်တန်းကြေးကတော့ ၃၅,၀၀၀ ကျပ် ပဲ ကျသင့်မှာဖြစ်ပြီး အချိန်အကန့်အသတ်မရှိ လေ့လာနိုင်ပါတယ်။\n\n"
-        "သင်တန်းအပ်နှံလိုပါက Admin သို့ ဆက်သွယ်နိုင်ပါသည် -\n"
-        "👉 @milimeterz"
+        "သင်တန်းကြေးကတော့ **၃၅,၀၀၀ ကျပ်** ဖြစ်ပြီး အချိန်အကန့်အသတ်မရှိ လေ့လာနိုင်ပါတယ်။\n\n"
+        "🤩 **Wave** - 09448835260 (Kaung Si Thu)\n"
+        "🤩 **Kpay** - 09752828949 (Aye Sandar Moe)\n\n"
+        "📌 ငွေလွဲပြီးပါက **ပြေစာပုံကို Bot ချတ်ထဲသို့ တိုက်ရိုက် ပို့ပေးပါခင်ဗျာ**။ Admin စစ်ဆေးပြီးပါက သင်တန်းချန်နယ် ဝင်ခွင့်လင့်ခ် ပို့ပေးပါမည်။\n\n"
+        "**ဆက်သွယ်ရန်** 👇\n"
+        "@milimeterz"
     )
     await callback.message.answer(class_text)
     await callback.answer()
@@ -117,27 +121,6 @@ async def process_ads_inquiry(callback: CallbackQuery):
         "@kasnmoviewworld\n"
         "@kasnreviews1\n"
         "@kasnreviews3\n\n"
-        "https://t.me/+jS8kwg4rG1ZkYWU1\n"
-        "https://t.me/+ngM9sYGvAU44NDA1\n"
-        "https://t.me/+CN0BI4DqMPsyNDk1\n"
-        "https://t.me/+laf6oHxHWklmMzE1\n"
-        "https://t.me/+GsVFKMJiHjJjMzE9\n"
-        "https://t.me/+xK8FCmgVEd5kZWNl\n"
-        "https://t.me/+e0g781rHsso0MWM1\n"
-        "https://t.me/+O10ofdYJRiNkOGU1\n\n"
-        "**ကြော်ငြာလက်ခံမည့် ချန်နယ်များ**\n\n"
-        "https://t.me/moviewreviews\n"
-        "https://t.me/mwzkarsones\n"
-        "https://t.me/mwaction\n"
-        "https://t.me/mwromantic\n"
-        "https://t.me/mvonlyin18\n"
-        "https://t.me/vivamaxmw\n"
-        "https://t.me/mwjapankar\n"
-        "https://t.me/mvloecar\n"
-        "https://t.me/+Z_5OIp2otRI3YTE1\n"
-        "https://t.me/+GK1Vd9PJWpRjNmZl\n"
-        "https://t.me/+-VzQ3zcPb1c1YzJl\n"
-        "https://t.me/+vAybu6lgjNdhMTdl\n\n"
         "💎 **One Sub 3.5 ကျပ် ပါ**\n"
         "📌 **One day one post pin ပါ**\n"
         "💬 **ဆက်သွယ်ရန် =@milimeterz**"
@@ -146,7 +129,7 @@ async def process_ads_inquiry(callback: CallbackQuery):
     await callback.answer()
 
 
-# --- 📸 User တွေ ငွေလွဲပြေစာပို့ရင် Admin ဆီကို အတည်ပြုရန် ခလုတ်ပါ ပို့ပေးခြင်း ---
+# --- 📸 User တွေ ငွေလွဲပြေစာပို့ရင် Admin ဆီကို VIP လား၊ Class လား ခွဲခြားပြီး ပို့ပေးခြင်း ---
 @dp.message(F.photo)
 async def handle_payment_screenshot(message: Message):
     user = message.from_user
@@ -155,9 +138,11 @@ async def handle_payment_screenshot(message: Message):
                 f"🔗 **Username:** @{user.username if user.username else 'None'}\n" \
                 f"🆔 **User ID:** `{user.id}`"
 
+    # ခလုတ်နှစ်ခု (VIP အတွက် တစ်ခု၊ Online Class အတွက် တစ်ခု)
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="✅ ငွေမှန်သည် (Approve & Add to Channel)", callback_data=f"approve_{user.id}")]
+            [InlineKeyboardButton(text="💎 VIP Channel သို့ ထည့်ရန်", callback_data=f"approve_vip_{user.id}")],
+            [InlineKeyboardButton(text="📚 Online Class သို့ ထည့်ရန်", callback_data=f"approve_class_{user.id}")]
         ]
     )
 
@@ -175,13 +160,12 @@ async def handle_payment_screenshot(message: Message):
         await message.answer("ပြေစာပို့ရာတွင် အခက်အခဲရှိနေပါသည်။ ကျေးဇူးပြု၍ Admin ကို တိုက်ရိုက်ဆက်သွယ်ပေးပါ (@milimeterz)။")
 
 
-# --- ✅ Admin က 'ငွေမှန်သည်' ခလုတ်ကို နှိပ်လိုက်သည့်အခါ (Admin Approval လိုအပ်သော လင့်ခ်ထုတ်ပေးခြင်း) ---
-@dp.callback_query(F.data.startswith("approve_"))
-async def process_approve(callback: CallbackQuery):
-    target_user_id = int(callback.data.split("_")[1])
+# --- ✅ VIP Channel အတွက် အတည်ပြုပေးသောအခါ ---
+@dp.callback_query(F.data.startswith("approve_vip_"))
+async def process_approve_vip(callback: CallbackQuery):
+    target_user_id = int(callback.data.split("_")[2])
 
     try:
-        # creates_join_request=True ဖြင့် Admin ၏ Join Request အတည်ပြုချက်လိုအပ်သော လင့်ခ်ဖန်တီးခြင်း
         invite_link = await bot.create_chat_invite_link(
             chat_id=VIP_CHANNEL_ID,
             creates_join_request=True
@@ -189,19 +173,48 @@ async def process_approve(callback: CallbackQuery):
 
         await bot.send_message(
             chat_id=target_user_id,
-            text=f"🎉 **သင်၏ ငွေလွဲပြေစာ အတည်ပြုပြီးပါပြီ!**\n\n"
+            text=f"🎉 **သင်၏ VIP Channel ငွေလွဲပြေစာ အတည်ပြုပြီးပါပြီ!**\n\n"
                  f"VIP Channel သို့ ဝင်ရောက်ရန် အောက်ပါလင့်ခ်ကို နှိပ်ပြီး Join Request တင်ပေးပါ (Admin မှ စစ်ဆေးအတည်ပြုပေးပါမည်) -\n"
                  f"👉 {invite_link.invite_link}"
         )
 
         await callback.message.edit_caption(
-            caption=callback.message.caption + "\n\n✅ **[အတည်ပြုပြီး & Join Request လင့်ခ် ပို့ပြီးပါပြီ]**",
+            caption=callback.message.caption + "\n\n✅ **[VIP Channel လင့်ခ် ပို့ပြီးပါပြီ]**",
             parse_mode="Markdown"
         )
-        await callback.answer("✅ User ထံသို့ Admin Approval လင့်ခ် အောင်မြင်စွာ ပို့ပြီးပါပြီ။")
+        await callback.answer("✅ VIP လင့်ခ် ပို့ပြီးပါပြီ။")
 
     except Exception as e:
-        print(f"ERROR: Failed to approve user {target_user_id}: {e}")
+        print(f"ERROR: Failed to approve VIP for user {target_user_id}: {e}")
+        await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
+
+
+# --- ✅ Online Class အတွက် အတည်ပြုပေးသောအခါ ---
+@dp.callback_query(F.data.startswith("approve_class_"))
+async def process_approve_class(callback: CallbackQuery):
+    target_user_id = int(callback.data.split("_")[2])
+
+    try:
+        invite_link = await bot.create_chat_invite_link(
+            chat_id=ONLINE_CLASS_CHANNEL_ID,
+            creates_join_request=True
+        )
+
+        await bot.send_message(
+            chat_id=target_user_id,
+            text=f"🎉 **သင်၏ Online Class ငွေလွဲပြေစာ အတည်ပြုပြီးပါပြီ!**\n\n"
+                 f"Online Class ချန်နယ်သို့ ဝင်ရောက်ရန် အောက်ပါလင့်ခ်ကို နှိပ်ပြီး Join Request တင်ပေးပါ (Admin မှ စစ်ဆေးအတည်ပြုပေးပါမည်) -\n"
+                 f"👉 {invite_link.invite_link}"
+        )
+
+        await callback.message.edit_caption(
+            caption=callback.message.caption + "\n\n✅ **[Online Class လင့်ခ် ပို့ပြီးပါပြီ]**",
+            parse_mode="Markdown"
+        )
+        await callback.answer("✅ Online Class လင့်ခ် ပို့ပြီးပါပြီ။")
+
+    except Exception as e:
+        print(f"ERROR: Failed to approve Online Class for user {target_user_id}: {e}")
         await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
 
 
@@ -231,7 +244,7 @@ async def admin_reply_handler(message: Message):
             await message.reply(f"❌ ပို့၍မရပါ။ အမှားအယွင်းရှိနေပါသည်: {e}")
             return
             
-    await message.reply("💡 User ဆီ စာပြန်လိုပါက ပုံအောက်ပါ **'✅ ငွေမှန်သည်'** ခလုတ်ကို နှိပ်ပါ (သို့မဟုတ်) ပုံကို Reply လုပ်၍ စာပို့ပါ။")
+    await message.reply("💡 User ဆီ စာပြန်လိုပါက ပုံအောက်ပါ ခလုတ်များကို နှိပ်ပါ (သို့မဟုတ်) ပုံကို Reply လုပ်၍ စာပို့ပါ။")
 
 
 # --- Render အတွက် Fake Web Server (Port 10000) ---
