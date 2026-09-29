@@ -121,6 +121,27 @@ async def process_ads_inquiry(callback: CallbackQuery):
         "@kasnmoviewworld\n"
         "@kasnreviews1\n"
         "@kasnreviews3\n\n"
+        "https://t.me/+jS8kwg4rG1ZkYWU1\n"
+        "https://t.me/+ngM9sYGvAU44NDA1\n"
+        "https://t.me/+CN0BI4DqMPsyNDk1\n"
+        "https://t.me/+laf6oHxHWklmMzE1\n"
+        "https://t.me/+GsVFKMJiHjJjMzE9\n"
+        "https://t.me/+xK8FCmgVEd5kZWNl\n"
+        "https://t.me/+e0g781rHsso0MWM1\n"
+        "https://t.me/+O10ofdYJRiNkOGU1\n\n"
+        "**ကြော်ငြာလက်ခံမည့် ချန်နယ်များ**\n\n"
+        "https://t.me/moviewreviews\n"
+        "https://t.me/mwzkarsones\n"
+        "https://t.me/mwaction\n"
+        "https://t.me/mwromantic\n"
+        "https://t.me/mvonlyin18\n"
+        "https://t.me/vivamaxmw\n"
+        "https://t.me/mwjapankar\n"
+        "https://t.me/mvloecar\n"
+        "https://t.me/+Z_5OIp2otRI3YTE1\n"
+        "https://t.me/+GK1Vd9PJWpRjNmZl\n"
+        "https://t.me/+-VzQ3zcPb1c1YzJl\n"
+        "https://t.me/+vAybu6lgjNdhMTdl\n\n"
         "💎 **One Sub 3.5 ကျပ် ပါ**\n"
         "📌 **One day one post pin ပါ**\n"
         "💬 **ဆက်သွယ်ရန် =@milimeterz**"
@@ -138,7 +159,6 @@ async def handle_payment_screenshot(message: Message):
                 f"🔗 **Username:** @{user.username if user.username else 'None'}\n" \
                 f"🆔 **User ID:** `{user.id}`"
 
-    # ခလုတ်နှစ်ခု (VIP အတွက် တစ်ခု၊ Online Class အတွက် တစ်ခု)
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             [InlineKeyboardButton(text="💎 VIP Channel သို့ ထည့်ရန်", callback_data=f"approve_vip_{user.id}")],
