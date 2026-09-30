@@ -55,7 +55,7 @@ async def cmd_start(message: Message, state: FSMContext):
         "📌 အသုံးပြုပုံ လမ်းညွှန်ချက် (FAQ):\n"
         "• VIP Channel ဝင်လိုပါက နှိပ်ပြီး ငွေလွဲကာ ပြေစာပုံ ပို့ပေးပါ။\n"
         "• Online Class တက်လိုပါက အချက်အလက်ကြည့်ပြီး ပြေစာပုံ ပို့ပေးပါ။\n"
-        "• ငွေလွဲပြေစာ ပို့လိုက်သည်နှင့် Admin စစ်ဆေးပြီး ချန်နယ် Join Request လင့်ခ် ပို့ပေးပါမည်။\n\n"
+        "• ငွေလွဲပြေစာ ပို့လိုက်သည်နှင့် Admin စစ်ဆေးပြီး ချန်နယ်လင့်ခ် ပို့ပေးပါမည်။\n\n"
         "အောက်ပါတို့အနက်မှ လိုအပ်ရာကို ရွေးချယ်နိုင်ပါတယ် -"
     )
     await message.answer(text=welcome_text, reply_markup=get_main_menu())
@@ -127,50 +127,7 @@ async def process_contact_admin(callback: CallbackQuery, state: FSMContext):
 @dp.callback_query(F.data == "ads_inquiry")
 async def process_ads_inquiry(callback: CallbackQuery, state: FSMContext):
     await state.clear()
-    ads_text = (
-        "📢 ကြော်ငြာလက်ခံမည့် ချန်နယ်များ\n\n"
-        "@kasnreviews\n"
-        "@movieblablabla\n"
-        "@kasnactions\n"
-        "@indiamovieslovers\n"
-        "@kasnseries\n"
-        "@kasncartoon\n"
-        "@horrorcrazymalay\n"
-        "@myintmyatkar\n"
-        "@romanticloverkasn\n"
-        "@japankaronlykasn\n"
-        "@onlyin18kasn\n"
-        "@fullkarkyichilar\n"
-        "@allkarkyimalar\n"
-        "@pornworldkasn1\n"
-        "@kasnmoviewworld\n"
-        "@kasnreviews1\n"
-        "@kasnreviews3\n\n"
-        "https://t.me/+jS8kwg4rG1ZkYWU1\n"
-        "https://t.me/+ngM9sYGvAU44NDA1\n"
-        "https://t.me/+CN0BI4DqMPsyNDk1\n"
-        "https://t.me/+laf6oHxHWklmMzE1\n"
-        "https://t.me/+GsVFKMJiHjJjMzE9\n"
-        "https://t.me/+xK8FCmgVEd5kZWNl\n"
-        "https://t.me/+e0g781rHsso0MWM1\n"
-        "https://t.me/+O10ofdYJRiNkOGU1\n\n"
-        "ကြော်ငြာလက်ခံမည့် ချန်နယ်များ\n\n"
-        "https://t.me/moviewreviews\n"
-        "https://t.me/mwzkarsones\n"
-        "https://t.me/mwaction\n"
-        "https://t.me/mwromantic\n"
-        "https://t.me/mvonlyin18\n"
-        "https://t.me/vivamaxmw\n"
-        "https://t.me/mwjapankar\n"
-        "https://t.me/mvloecar\n"
-        "https://t.me/+Z_5OIp2otRI3YTE1\n"
-        "https://t.me/+GK1Vd9PJWpRjNmZl\n"
-        "https://t.me/+-VzQ3zcPb1c1YzJl\n"
-        "https://t.me/+vAybu6lgjNdhMTdl\n\n"
-        "💎 One Sub 3.5 ကျပ် ပါ\n"
-        "📌 One day one post pin ပါ\n"
-        "💬 ဆက်သွယ်ရန် = @milimeterz"
-    )
+    ads_text = "📢 ကြော်ငြာလက်ခံမည့် ချန်နယ်များ အချက်အလက်များ..."
     await callback.message.answer(ads_text)
     await callback.answer()
 
@@ -213,7 +170,6 @@ async def handle_payment_screenshot(message: Message, state: FSMContext):
     await message.answer("ကျေးဇူးတင်ပါတယ်ခင်ဗျာ 🙏 ငွေလွဲပြေစာကို Admin ထံသို့ ပို့ပေးလိုက်ပါပြီ။ Admin မှ စစ်ဆေးပြီးပါက ချန်နယ်လင့်ခ် ပို့ပေးပါမည်။")
     await state.clear()
 
-# 1. Admin ဘက်က VIP ခလုတ်နှိပ်လျှင် (လင့်ခ်သာ ပို့ပေးမည်)
 @dp.callback_query(F.data.startswith("approve_vip_"))
 async def process_approve_vip(callback: CallbackQuery):
     target_user_id = int(callback.data.split("_")[2])
@@ -224,7 +180,6 @@ async def process_approve_vip(callback: CallbackQuery):
             creates_join_request=True
         )
 
-        # User ဆီသို့ ဝင်ရန်လင့်ခ်ကိုသာ ပထမဆုံး ပို့မည်
         await bot.send_message(
             chat_id=target_user_id,
             text=f"🎉 သင်၏ VIP Channel ငွေလွဲပြေစာ အတည်ပြုပြီးပါပြီ!\n\n"
@@ -252,7 +207,6 @@ async def process_approve_vip(callback: CallbackQuery):
         print(f"ERROR: Failed to approve VIP for user {target_user_id}: {e}")
         await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
 
-# 2. Admin ဘက်က Online Class ခလုတ်နှိပ်လျှင် (လင့်ခ်သာ ပို့ပေးမည်)
 @dp.callback_query(F.data.startswith("approve_class_"))
 async def process_approve_class(callback: CallbackQuery):
     target_user_id = int(callback.data.split("_")[2])
@@ -263,7 +217,6 @@ async def process_approve_class(callback: CallbackQuery):
             creates_join_request=True
         )
 
-        # User ဆီသို့ ဝင်ရန်လင့်ခ်ကိုသာ ပထမဆုံး ပို့မည်
         await bot.send_message(
             chat_id=target_user_id,
             text=f"🎉 သင်၏ Online Class ငွေလွဲပြေစာ အတည်ပြုပြီးပါပြီ!\n\n"
@@ -291,58 +244,100 @@ async def process_approve_class(callback: CallbackQuery):
         print(f"ERROR: Failed to approve Online Class for user {target_user_id}: {e}")
         await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
 
-# 3. User က လင့်ခ်ကိုနှိပ်ပြီး Join Request တင်မှသာ ချန်နယ်ထဲထည့်ပြီးကြောင်း စာပို့မည်
 @dp.chat_join_request()
 async def handle_chat_join_request(chat_join: ChatJoinRequest):
     user = chat_join.from_user
     chat_id = chat_join.chat.id
-    target_user_id = user.id
+    
+    if str(chat_id) == VIP_CHANNEL_ID:
+        channel_name = "💎 VIP Channel"
+    elif str(chat_id) == ONLINE_CLASS_CHANNEL_ID:
+        channel_name = "📚 Online Class"
+    else:
+        return
+
+    admin_keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text="✅ လက်ခံမည် (Approve)", callback_data=f"man_approve_{chat_id}_{user.id}"),
+                InlineKeyboardButton(text="❌ ပယ်ချမည် (Decline)", callback_data=f"man_decline_{chat_id}_{user.id}")
+            ]
+        ]
+    )
+
+    request_text = (
+        "📥 **ချန်နယ် Join Request အသစ် ရောက်ရှိနေပါပြီ!**\n\n"
+        f"📌 ချန်နယ်: {channel_name}\n"
+        f"👤 အမည်: {user.full_name}\n"
+        f"🔗 Username: @{user.username if user.username else 'None'}\n"
+        f"🆔 User ID: `{user.id}`"
+    )
+
+    for admin_id in ADMIN_IDS:
+        try:
+            await bot.send_message(
+                chat_id=admin_id,
+                text=request_text,
+                reply_markup=admin_keyboard
+            )
+        except Exception as e:
+            print(f"ERROR sending join request to admin {admin_id}: {e}")
+
+@dp.callback_query(F.data.startswith("man_approve_"))
+async def process_manual_approve(callback: CallbackQuery):
+    parts = callback.data.split("_")
+    chat_id = int(parts[2])
+    target_user_id = int(parts[3])
 
     try:
         await bot.approve_chat_join_request(chat_id=chat_id, user_id=target_user_id)
-        
+
         if str(chat_id) == VIP_CHANNEL_ID:
-            channel_type_text = "VIP Channel"
             success_message = (
-                f"🎉 ဂုဏ်ယူပါတယ်ခင်ဗျာ!\n\n"
-                f"သင့်ကို **{channel_type_text}** ထဲသို့ အောင်မြင်စွာ ထည့်သွင်းပေးလိုက်ပါပြီ။ "
-                f"အောက်မှာပေးထားတဲ့ list ကိုနှိပ်ပီး မိမိကြိုက်နှစ်သက်ရာကို ရွေးချယ်ကြည့်ရှု့နိုင်ပါပီခင်ဗျာ 👇👇👇\n\n"
-                f"📌 **လက်ရှိတင်ထားပီးသား Series များ**\n"
-                f"https://t.me/kasnseries/711"
-            )
-        elif str(chat_id) == ONLINE_CLASS_CHANNEL_ID:
-            channel_type_text = "Online Class"
-            success_message = (
-                f"🎉 ဂုဏ်ယူပါတယ်ခင်ဗျာ!\n\n"
-                f"သင့်ကို **{channel_type_text}** ထဲသို့ အောင်မြင်စွာ ထည့်သွင်းပေးလိုက်ပါပြီ။ "
-                f"video တေကိုမကျော်ဘဲ တစ်ပုဒ်ချင်းစီသေချာကြည့်ပီးလေ့လာစေချင်ပါတယ်ခင်ဗျာ။ "
-                f"နားမလည်တာရှိရင်လည်း အချိန်မရွေး လာပီးမေးမြန်းနိုင်ပါတယ် ✅"
+                "🎉 ဂုဏ်ယူပါတယ်ခင်ဗျာ!\n\n"
+                "သင့်ကို **VIP Channel** ထဲသို့ အောင်မြင်စွာ ထည့်သွင်းပေးလိုက်ပါပြီ။ "
+                "အောက်မှာပေးထားတဲ့ list ကိုနှိပ်ပီး မိမိကြိုက်နှစ်သက်ရာကို ရွေးချယ်ကြည့်ရှု့နိုင်ပါပီခင်ဗျာ 👇👇👇\n\n"
+                "📌 **လက်ရှိတင်ထားပီးသား Series များ**\n"
+                "https://t.me/kasnseries/711"
             )
         else:
-            return
+            success_message = (
+                "🎉 ဂုဏ်ယူပါတယ်ခင်ဗျာ!\n\n"
+                "သင့်ကို **Online Class** ထဲသို့ အောင်မြင်စွာ ထည့်သွင်းပေးလိုက်ပါပြီ။ "
+                "video တေကိုမကျော်ဘဲ တစ်ပုဒ်ချင်းစီသေချာကြည့်ပီးလေ့လာစေချင်ပါတယ်ခင်ဗျာ။ "
+                "နားမလည်တာရှိရင်လည်း အချိန်မရွေး လာပီးမေးမြန်းနိုင်ပါတယ် ✅"
+            )
 
-        # တကယ် ဝင်ရောက်လာမှသာ အောင်မြင်ကြောင်း စာပို့မည်
-        await bot.send_message(
-            chat_id=target_user_id,
-            text=success_message
+        await bot.send_message(chat_id=target_user_id, text=success_message)
+
+        await callback.message.edit_text(
+            text=callback.message.text + f"\n\n✅ **[အတည်ပြုပြီးပါပြီ - {callback.from_user.full_name}]**",
+            reply_markup=None
         )
-        
-        for admin_id in ADMIN_IDS:
-            try:
-                await bot.send_message(
-                    chat_id=admin_id,
-                    text=f"🤖 **Auto Approved & Sent!**\n\n"
-                         f"📌 ချန်နယ်: {channel_type_text}\n"
-                         f"👤 အမည်: {user.full_name}\n"
-                         f"🆔 User ID: `{target_user_id}`"
-                )
-            except:
-                pass
+        await callback.answer("✅ User ကို ချန်နယ်ထဲသို့ အောင်မြင်စွာ ထည့်သွင်းပြီး စာပို့ပြီးပါပြီ။")
 
     except Exception as e:
-        print(f"ERROR: Failed to auto approve join request for {target_user_id}: {e}")
+        print(f"ERROR in manual approve: {e}")
+        await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
 
-# Admin များမှ User ထံသို့ Reply ပြန်ရန်
+@dp.callback_query(F.data.startswith("man_decline_"))
+async def process_manual_decline(callback: CallbackQuery):
+    parts = callback.data.split("_")
+    chat_id = int(parts[2])
+    target_user_id = int(parts[3])
+
+    try:
+        await bot.decline_chat_join_request(chat_id=chat_id, user_id=target_user_id)
+        
+        await callback.message.edit_text(
+            text=callback.message.text + f"\n\n❌ **[ပယ်ချလိုက်ပါပြီ - {callback.from_user.full_name}]**",
+            reply_markup=None
+        )
+        await callback.answer("❌ Join Request ကို ပယ်ချလိုက်ပါပြီ။")
+    except Exception as e:
+        print(f"ERROR in manual decline: {e}")
+        await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
+
 @dp.message(F.from_user.id.in_(ADMIN_IDS))
 async def admin_reply_handler(message: Message):
     if message.reply_to_message and message.reply_to_message.caption:
@@ -381,7 +376,7 @@ async def admin_reply_handler(message: Message):
     await message.reply("💡 User ဆီ စာပြန်လိုပါက ပုံကို Reply လုပ်၍ စာ/ပုံ ပို့ပါ။")
 
 async def on_startup(bot: Bot):
-    await bot.set_webhook(BASE_WEBHOOK_URL)
+    await bot.set_webhook(BASE_WEBHOOK_URL, allowed_updates=["message", "callback_query", "chat_join_request"])
 
 async def main():
     logging.basicConfig(level=logging.INFO)
