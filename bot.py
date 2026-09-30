@@ -16,7 +16,9 @@ from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_applicati
 from aiohttp import web
 
 TOKEN = os.getenv("TOKEN")
-ADMIN_ID = 1861529838
+
+# Admin ID နှစ်ယောက်စာ ထည့်သွင်းထားပါသည်
+ADMIN_IDS = [1861529838, 7130847181]
 
 VIP_CHANNEL_ID = "-1002535791299"
 ONLINE_CLASS_CHANNEL_ID = "-1002667237249"
@@ -199,18 +201,20 @@ async def handle_payment_screenshot(message: Message, state: FSMContext):
         ]
     )
 
-    try:
-        await bot.send_photo(
-            chat_id=ADMIN_ID,
-            photo=message.photo[-1].file_id,
-            caption=user_info,
-            reply_markup=keyboard
-        )
-        await message.answer("ကျေးဇူးတင်ပါတယ်ခင်ဗျာ 🙏 ငွေလွဲပြေစာကို Admin ထံသို့ ပို့ပေးလိုက်ပါပြီ။ Admin မှ စစ်ဆေးပြီးပါက ချန်နယ်လင့်ခ် ပို့ပေးပါမည်။")
-        await state.clear()
-    except Exception as e:
-        print(f"ERROR: Failed to handle photo from user {user.id}: {e}")
-        await message.answer("ပြေစာပို့ရာတွင် အခက်အခဲရှိနေပါသည်၊ ကျေးဇူးပြု၍ Admin ကို တိုက်ရိုက်ဆက်သွယ်ပါ (@milimeterz)။")
+    # Admin အားလုံးထံသို့ ပြေစာ တပြိုင်နက် ပို့ပေးခြင်း
+    for admin_id in ADMIN_IDS:
+        try:
+            await bot.send_photo(
+                chat_id=admin_id,
+                photo=message.photo[-1].file_id,
+                caption=user_info,
+                reply_markup=keyboard
+            )
+        except Exception as e:
+            print(f"ERROR: Failed to send photo to admin {admin_id}: {e}")
+
+    await message.answer("ကျေးဇူးတင်ပါတယ်ခင်ဗျာ 🙏 ငွေလွဲပြေစာကို Admin ထံသို့ ပို့ပေးလိုက်ပါပြီ။ Admin မှ စစ်ဆေးပြီးပါက ချန်နယ်လင့်ခ် ပို့ပေးပါမည်။")
+    await state.clear()
 
 @dp.callback_query(F.data.startswith("approve_vip_"))
 async def process_approve_vip(callback: CallbackQuery):
@@ -229,15 +233,20 @@ async def process_approve_vip(callback: CallbackQuery):
                  f"👉 {invite_link.invite_link}"
         )
 
-        await bot.send_message(
-            chat_id=ADMIN_ID,
-            text=f"✅ **VIP Channel လင့်ခ် ပို့ပြီးပါပြီ**\n\n"
-                 f"👤 User ID: `{target_user_id}`\n"
-                 f"🔗 Link: {invite_link.invite_link}"
-        )
+        # Admin အားလုံးဆီသို့ အကြောင်းကြားရန်
+        for admin_id in ADMIN_IDS:
+            try:
+                await bot.send_message(
+                    chat_id=admin_id,
+                    text=f"✅ **VIP Channel လင့်ခ် ပို့ပြီးပါပြီ** (ဆောင်ရွက်သူ: {callback.from_user.full_name})\n\n"
+                         f"👤 User ID: `{target_user_id}`\n"
+                         f"🔗 Link: {invite_link.invite_link}"
+                )
+            except:
+                pass
 
         await callback.message.edit_caption(
-            caption=callback.message.caption + "\n\n✅ [VIP Channel လင့်ခ် ပို့ပြီးပါပြီ]"
+            caption=callback.message.caption + f"\n\n✅ [VIP Channel လင့်ခ် ပို့ပြီးပါပြီ ({callback.from_user.full_name})]"
         )
         await callback.answer("✅ VIP လင့်ခ် ပို့ပြီးပါပြီ။")
 
@@ -262,15 +271,20 @@ async def process_approve_class(callback: CallbackQuery):
                  f"👉 {invite_link.invite_link}"
         )
 
-        await bot.send_message(
-            chat_id=ADMIN_ID,
-            text=f"✅ **Online Class လင့်ခ် ပို့ပြီးပါပြီ**\n\n"
-                 f"👤 User ID: `{target_user_id}`\n"
-                 f"🔗 Link: {invite_link.invite_link}"
-        )
+        # Admin အားလုံးဆီသို့ အကြောင်းကြားရန်
+        for admin_id in ADMIN_IDS:
+            try:
+                await bot.send_message(
+                    chat_id=admin_id,
+                    text=f"✅ **Online Class လင့်ခ် ပို့ပြီးပါပြီ** (ဆောင်ရွက်သူ: {callback.from_user.full_name})\n\n"
+                         f"👤 User ID: `{target_user_id}`\n"
+                         f"🔗 Link: {invite_link.invite_link}"
+                )
+            except:
+                pass
 
         await callback.message.edit_caption(
-            caption=callback.message.caption + "\n\n✅ [Online Class လင့်ခ် ပို့ပြီးပါပြီ]"
+            caption=callback.message.caption + f"\n\n✅ [Online Class လင့်ခ် ပို့ပြီးပါပြီ ({callback.from_user.full_name})]"
         )
         await callback.answer("✅ Online Class လင့်ခ် ပို့ပြီးပါပြီ။")
 
@@ -278,59 +292,59 @@ async def process_approve_class(callback: CallbackQuery):
         print(f"ERROR: Failed to approve Online Class for user {target_user_id}: {e}")
         await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
 
-# User ဘက်မှ Join Request တင်လိုက်သည့်အခါ Admin ထံသို့ ခလုတ်ပါဝင်သော အကြောင်းကြားစာ ပို့ခြင်း
+# User ဘက်က Join Request တင်လိုက်တာနဲ့ အလိုအလျောက်လက်ခံပြီး စာပို့မည်
 @dp.chat_join_request()
 async def handle_chat_join_request(chat_join: ChatJoinRequest):
     user = chat_join.from_user
     chat_id = chat_join.chat.id
-    
-    if str(chat_id) == VIP_CHANNEL_ID:
-        channel_name = "💎 VIP Channel"
-    elif str(chat_id) == ONLINE_CLASS_CHANNEL_ID:
-        channel_name = "📚 Online Class"
-    else:
-        channel_name = "📢 Channel"
-
-    keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[
-            [InlineKeyboardButton(text="✅ Channel ထဲသို့ လက်ခံမည် (Accept)", callback_data=f"accept_join_{chat_id}_{user.id}")]
-        ]
-    )
-
-    text = (
-        f"📩 **Join Request အသစ် ရောက်ရှိပါပြီ!**\n\n"
-        f"📌 ချန်နယ်: {channel_name}\n"
-        f"👤 အမည်: {user.full_name}\n"
-        f"🔗 Username: @{user.username if user.username else 'None'}\n"
-        f"🆔 User ID: `{user.id}`\n\n"
-        f"အောက်ပါ ခလုတ်ကို နှိပ်၍ ချန်နယ်ထဲသို့ လက်ခံနိုင်ပါသည် -"
-    )
-
-    try:
-        await bot.send_message(chat_id=ADMIN_ID, text=text, reply_markup=keyboard)
-    except Exception as e:
-        print(f"ERROR: Failed to send join request to admin: {e}")
-
-# Admin က Accept ခလုတ်နှိပ်၍ ချန်နယ်ထဲသို့ အလိုအလျောက် ဝင်ခွင့်ပေးခြင်း
-@dp.callback_query(F.data.startswith("accept_join_"))
-async def process_accept_join(callback: CallbackQuery):
-    data_parts = callback.data.split("_")
-    chat_id = int(data_parts[2])
-    target_user_id = int(data_parts[3])
+    target_user_id = user.id
 
     try:
         await bot.approve_chat_join_request(chat_id=chat_id, user_id=target_user_id)
         
-        await callback.message.edit_text(
-            text=callback.message.text + "\n\n✅ **[ဤသူ့ကို ချန်နယ်ထဲသို့ အောင်မြင်စွာ လက်ခံပြီးပါပြီ]**"
+        if str(chat_id) == VIP_CHANNEL_ID:
+            channel_type_text = "VIP Channel"
+            success_message = (
+                f"🎉 ဂုဏ်ယူပါတယ်ခင်ဗျာ!\n\n"
+                f"သင့်ကို **{channel_type_text}** ထဲသို့ အောင်မြင်စွာ ထည့်သွင်းပေးလိုက်ပါပြီ။ "
+                f"အောက်မှာပေးထားတဲ့ list ကိုနှိပ်ပီး မိမိကြိုက်နှစ်သက်ရာကို ရွေးချယ်ကြည့်ရှု့နိုင်ပါပီခင်ဗျာ 👇👇👇\n\n"
+                f"📌 **လက်ရှိတင်ထားပီးသား Series များ**\n"
+                f"https://t.me/kasnseries/711"
+            )
+        elif str(chat_id) == ONLINE_CLASS_CHANNEL_ID:
+            channel_type_text = "Online Class"
+            success_message = (
+                f"🎉 ဂုဏ်ယူပါတယ်ခင်ဗျာ!\n\n"
+                f"သင့်ကို **{channel_type_text}** ထဲသို့ အောင်မြင်စွာ ထည့်သွင်းပေးလိုက်ပါပြီ။ "
+                f"video တေကိုမကျော်ဘဲ တစ်ပုဒ်ချင်းစီသေချာကြည့်ပီးလေ့လာစေချင်ပါတယ်ခင်ဗျာ။ "
+                f"နားမလည်တာရှိရင်လည်း အချိန်မရွေး လာပီးမေးမြန်းနိုင်ပါတယ် ✅"
+            )
+        else:
+            return
+
+        await bot.send_message(
+            chat_id=target_user_id,
+            text=success_message
         )
-        await callback.answer("✅ User ကို ချန်နယ်ထဲသို့ အောင်မြင်စွာ လက်ခံလိုက်ပါပြီ။", show_alert=True)
+        
+        # Admin အားလုံးဆီသို့ အကြောင်းကြားရန်
+        for admin_id in ADMIN_IDS:
+            try:
+                await bot.send_message(
+                    chat_id=admin_id,
+                    text=f"🤖 **Auto Approved & Sent!**\n\n"
+                         f"📌 ချန်နယ်: {channel_type_text}\n"
+                         f"👤 အမည်: {user.full_name}\n"
+                         f"🆔 User ID: `{target_user_id}`"
+                )
+            except:
+                pass
 
     except Exception as e:
-        print(f"ERROR: Failed to approve join request: {e}")
-        await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည် (သို့) User သည် Request ကို ပြန်ဖျက်ထားပါသည်ခင်ဗျာ။", show_alert=True)
+        print(f"ERROR: Failed to auto approve join request for {target_user_id}: {e}")
 
-@dp.message(F.from_user.id == ADMIN_ID)
+# Admin များမှ User ထံသို့ Reply ပြန်ရန်
+@dp.message(F.from_user.id.in_(ADMIN_IDS))
 async def admin_reply_handler(message: Message):
     if message.reply_to_message and message.reply_to_message.caption:
         caption = message.reply_to_message.caption
