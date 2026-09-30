@@ -82,7 +82,7 @@ async def process_online_class(callback: CallbackQuery, state: FSMContext):
         "🤩 Wave - 09448835260 (Kaung Si Thu)\n"
         "🤩 Kpay - 09752828949 (Aye Sandar Moe)\n\n"
         "📌 [Online Class အတွက် ရွေးချယ်ထားပါသည်]\n"
-        "ငွေလွဲပြီးပါက ပြေစာပုံကို ယခုချတ်ထဲသို့ တိုက်ရိုက် ပို့ပေးပါခင်ဗျာ။ Admin စစ်ဆေးပြီးပါက သင်တန်းချန်နယ် ဝင်ခွင့်လင့်ခ် ပို့ပေးပါမည်။\n\n"
+        "ငွေလွဲပြီးပါက ပြေစာပုံကို ယခု Chat ထဲသို့ တိုက်ရိုက် ပို့ပေးပါခင်ဗျာ။ Admin စစ်ဆေးပြီးပါက သင်တန်းချန်နယ် ဝင်ခွင့်လင့်ခ် ပို့ပေးပါမည်။\n\n"
         "ဆက်သွယ်ရန် 👇\n"
         "@milimeterz"
     )
@@ -104,9 +104,7 @@ async def process_vip_channel(callback: CallbackQuery, state: FSMContext):
         "📌 [VIP Channel အတွက် ရွေးချယ်ထားပါသည်]\n"
         "📌 ဒီ Ph no တွေသာ သုံးပါတယ်။\n"
         "📌 ငွေလွဲပြီး ပြေစာပုံ ပို့ထားပေးပါခင်ဗျာ ။\n\n"
-        "ဆက်သွယ်ရန် 👇👇\n"
-        "@milimeterz\n"
-        "@AS273152\n\n"
+
         "လက်ရှိတင်ထားပြီးသား ဇာတ်လမ်းတွဲစာရင်းကြည့်ရန်👇👇👇\n"
         "https://t.me/kasnseries/711"
     )
@@ -278,7 +276,6 @@ async def process_approve_class(callback: CallbackQuery):
         print(f"ERROR: Failed to approve Online Class for user {target_user_id}: {e}")
         await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
 
-# User ဘက်မှ Join Request တင်လိုက်သည့်အခါ Admin ထံသို့ ခလုတ်ပါဝင်သော အကြောင်းကြားစာ ပို့ခြင်း
 @dp.chat_join_request()
 async def handle_chat_join_request(chat_join: ChatJoinRequest):
     user = chat_join.from_user
@@ -311,7 +308,6 @@ async def handle_chat_join_request(chat_join: ChatJoinRequest):
     except Exception as e:
         print(f"ERROR: Failed to send join request to admin: {e}")
 
-# Admin က Accept ခလုတ်နှိပ်၍ ချန်နယ်ထဲသို့ အလိုအလျောက် ဝင်ခွင့်ပေးခြင်း
 @dp.callback_query(F.data.startswith("accept_join_"))
 async def process_accept_join(callback: CallbackQuery):
     data_parts = callback.data.split("_")
@@ -321,10 +317,33 @@ async def process_accept_join(callback: CallbackQuery):
     try:
         await bot.approve_chat_join_request(chat_id=chat_id, user_id=target_user_id)
         
-        await callback.message.edit_text(
-            text=callback.message.text + "\n\n✅ **[ဤသူ့ကို ချန်နယ်ထဲသို့ အောင်မြင်စွာ လက်ခံပြီးပါပြီ]**"
+        if str(chat_id) == VIP_CHANNEL_ID:
+            channel_type_text = "VIP Channel"
+            success_message = (
+                f"🎉 ဂုဏ်ယူပါတယ်ခင်ဗျာ!\n\n"
+                f"သင့်ကို **{channel_type_text}** ထဲသို့ အောင်မြင်စွာ ထည့်သွင်းပေးလိုက်ပါပြီ။ "
+                f"အောက်မှာပေးထားတဲ့ list ကိုနှိပ်ပီး မိမိကြိုက်နှစ်သက်ရာကို ရွေးချယ်ကြည့်ရှု့နိုင်ပါပီခင်ဗျာ 👇👇👇\n\n"
+                f"📌 **လက်ရှိတင်ထားပီးသား Series များ**\n"
+                f"https://t.me/kasnseries/711"
+            )
+        else:
+            channel_type_text = "Online Class"
+            success_message = (
+                f"🎉 ဂုဏ်ယူပါတယ်ခင်ဗျာ!\n\n"
+                f"သင့်ကို **{channel_type_text}** ထဲသို့ အောင်မြင်စွာ ထည့်သွင်းပေးလိုက်ပါပြီ။ "
+                f"video တေကိုမကျော်ဘဲ တစ်ပုဒ်ချင်းစီသေချာကြည့်ပီးလေ့လာစေချင်ပါတယ်ခင်ဗျာ။ "
+                f"နားမလည်တာရှိရင်လည်း အချိန်မရွေး လာပီးမေးမြန်းနိုင်ပါတယ် ✅"
+            )
+
+        await bot.send_message(
+            chat_id=target_user_id,
+            text=success_message
         )
-        await callback.answer("✅ User ကို ချန်နယ်ထဲသို့ အောင်မြင်စွာ လက်ခံလိုက်ပါပြီ။", show_alert=True)
+        
+        await callback.message.edit_text(
+            text=callback.message.text + f"\n\n✅ **[ဤသူ့ကို {channel_type_text} ထဲသို့ အောင်မြင်စွာ လက်ခံပြီး User ထံ အကြောင်းကြားပြီးပါပြီ]**"
+        )
+        await callback.answer("✅ User ကို ချန်နယ်ထဲသို့ လက်ခံပြီး အကြောင်းကြားပြီးပါပြီ။", show_alert=True)
 
     except Exception as e:
         print(f"ERROR: Failed to approve join request: {e}")
