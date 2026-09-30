@@ -30,6 +30,9 @@ BASE_WEBHOOK_URL = f"{WEBHOOK_URL}{WEBHOOK_PATH}"
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
+# Admin တွေဆီ ပို့ထားတဲ့ message များကို မှတ်ထားရန် dictionary (key: user_id or unique key, value: {admin_id: message_id})
+admin_msg_tracker = {}
+
 class UserState(StatesGroup):
     waiting_for_vip_slip = State()
     waiting_for_class_slip = State()
@@ -40,9 +43,8 @@ def get_main_menu():
             [InlineKeyboardButton(text="🎬 Free Movie Channels များကို ဝင်ရန်", callback_data="free_movies")],
             [InlineKeyboardButton(text="📚 Online Class တက်ရောက်ရန်", callback_data="online_class")],
             [InlineKeyboardButton(text="💎 VIP Channel သို့ ဝင်ရောက်ရန်", callback_data="vip_channel")],
-             [InlineKeyboardButton(text="📢 ကြော်ငြာကိစ္စဆွေးနွေးရန်", callback_data="ads_inquiry")],
+            [InlineKeyboardButton(text="📢 ကြော်ငြာကိစ္စဆွေးနွေးရန်", callback_data="ads_inquiry")],
             [InlineKeyboardButton(text="💬 ဆက်သွယ်ရန် / Admin သို့ စကားပြောရန်", callback_data="contact_admin")]
-           
         ]
     )
     return keyboard
@@ -198,14 +200,18 @@ async def handle_payment_screenshot(message: Message, state: FSMContext):
         ]
     )
 
+    tracker_key = f"payment_{user.id}"
+    admin_msg_tracker[tracker_key] = {}
+
     for admin_id in ADMIN_IDS:
         try:
-            await bot.send_photo(
+            sent_msg = await bot.send_photo(
                 chat_id=admin_id,
                 photo=message.photo[-1].file_id,
                 caption=user_info,
                 reply_markup=keyboard
             )
+            admin_msg_tracker[tracker_key][admin_id] = sent_msg.message_id
         except Exception as e:
             print(f"ERROR: Failed to send photo to admin {admin_id}: {e}")
 
@@ -215,6 +221,7 @@ async def handle_payment_screenshot(message: Message, state: FSMContext):
 @dp.callback_query(F.data.startswith("approve_vip_"))
 async def process_approve_vip(callback: CallbackQuery):
     target_user_id = int(callback.data.split("_")[2])
+    tracker_key = f"payment_{target_user_id}"
 
     try:
         invite_link = await bot.create_chat_invite_link(
@@ -240,9 +247,20 @@ async def process_approve_vip(callback: CallbackQuery):
             except:
                 pass
 
-        await callback.message.edit_caption(
-            caption=callback.message.caption + f"\n\n✅ [VIP Channel လင့်ခ် ပို့ပြီးပါပြီ ({callback.from_user.full_name})]"
-        )
+        # Admin အားလုံးဆီ ပို့ထားတဲ့ ပုံပေါ်က ခလုတ်များကို အလိုအလျောက် ဖြုတ်ပေးရန်
+        if tracker_key in admin_msg_tracker:
+            for admin_id, msg_id in admin_msg_tracker[tracker_key].items():
+                try:
+                    await bot.edit_message_caption(
+                        chat_id=admin_id,
+                        message_id=msg_id,
+                        caption=callback.message.caption + f"\n\n✅ [VIP Channel လင့်ခ် ပို့ပြီးပါပြီ ({callback.from_user.full_name})]",
+                        reply_markup=None
+                    )
+                except:
+                    pass
+            del admin_msg_tracker[tracker_key]
+
         await callback.answer("✅ VIP လင့်ခ် ပို့ပြီးပါပြီ။")
 
     except Exception as e:
@@ -252,6 +270,7 @@ async def process_approve_vip(callback: CallbackQuery):
 @dp.callback_query(F.data.startswith("approve_class_"))
 async def process_approve_class(callback: CallbackQuery):
     target_user_id = int(callback.data.split("_")[2])
+    tracker_key = f"payment_{target_user_id}"
 
     try:
         invite_link = await bot.create_chat_invite_link(
@@ -277,9 +296,20 @@ async def process_approve_class(callback: CallbackQuery):
             except:
                 pass
 
-        await callback.message.edit_caption(
-            caption=callback.message.caption + f"\n\n✅ [Online Class လင့်ခ် ပို့ပြီးပါပြီ ({callback.from_user.full_name})]"
-        )
+        # Admin အားလုံးဆီ ပို့ထားတဲ့ ပုံပေါ်က ခလုတ်များကို အလိုအလျောက် ဖြုတ်ပေးရန်
+        if tracker_key in admin_msg_tracker:
+            for admin_id, msg_id in admin_msg_tracker[tracker_key].items():
+                try:
+                    await bot.edit_message_caption(
+                        chat_id=admin_id,
+                        message_id=msg_id,
+                        caption=callback.message.caption + f"\n\n✅ [Online Class လင့်ခ် ပို့ပြီးပါပြီ ({callback.from_user.full_name})]",
+                        reply_markup=None
+                    )
+                except:
+                    pass
+            del admin_msg_tracker[tracker_key]
+
         await callback.answer("✅ Online Class လင့်ခ် ပို့ပြီးပါပြီ။")
 
     except Exception as e:
@@ -315,13 +345,17 @@ async def handle_chat_join_request(chat_join: ChatJoinRequest):
         f"🆔 User ID: `{user.id}`"
     )
 
+    tracker_key = f"join_{chat_id}_{user.id}"
+    admin_msg_tracker[tracker_key] = {}
+
     for admin_id in ADMIN_IDS:
         try:
-            await bot.send_message(
+            sent_msg = await bot.send_message(
                 chat_id=admin_id,
                 text=request_text,
                 reply_markup=admin_keyboard
             )
+            admin_msg_tracker[tracker_key][admin_id] = sent_msg.message_id
         except Exception as e:
             print(f"ERROR sending join request to admin {admin_id}: {e}")
 
@@ -330,6 +364,7 @@ async def process_manual_approve(callback: CallbackQuery):
     parts = callback.data.split("_")
     chat_id = int(parts[2])
     target_user_id = int(parts[3])
+    tracker_key = f"join_{chat_id}_{target_user_id}"
 
     try:
         await bot.approve_chat_join_request(chat_id=chat_id, user_id=target_user_id)
@@ -352,10 +387,20 @@ async def process_manual_approve(callback: CallbackQuery):
 
         await bot.send_message(chat_id=target_user_id, text=success_message)
 
-        await callback.message.edit_text(
-            text=callback.message.text + f"\n\n✅ **[အတည်ပြုပြီးပါပြီ - {callback.from_user.full_name}]**",
-            reply_markup=None
-        )
+        # Admin အားလုံးဆီ ပို့ထားတဲ့ Join Request မက်ဆေ့ချ်များပေါ်က ခလုတ်များကို ဖြုတ်ပေးရန်
+        if tracker_key in admin_msg_tracker:
+            for admin_id, msg_id in admin_msg_tracker[tracker_key].items():
+                try:
+                    await bot.edit_message_text(
+                        chat_id=admin_id,
+                        message_id=msg_id,
+                        text=callback.message.text + f"\n\n✅ **[အတည်ပြုပြီးပါပြီ - {callback.from_user.full_name}]**",
+                        reply_markup=None
+                    )
+                except:
+                    pass
+            del admin_msg_tracker[tracker_key]
+
         await callback.answer("✅ User ကို ချန်နယ်ထဲသို့ အောင်မြင်စွာ ထည့်သွင်းပြီး စာပို့ပြီးပါပြီ။")
 
     except Exception as e:
@@ -367,14 +412,25 @@ async def process_manual_decline(callback: CallbackQuery):
     parts = callback.data.split("_")
     chat_id = int(parts[2])
     target_user_id = int(parts[3])
+    tracker_key = f"join_{chat_id}_{target_user_id}"
 
     try:
         await bot.decline_chat_join_request(chat_id=chat_id, user_id=target_user_id)
         
-        await callback.message.edit_text(
-            text=callback.message.text + f"\n\n❌ **[ပယ်ချလိုက်ပါပြီ - {callback.from_user.full_name}]**",
-            reply_markup=None
-        )
+        # Admin အားလုံးဆီ ပို့ထားတဲ့ Join Request မက်ဆေ့ချ်များပေါ်က ခလုတ်များကို ဖြုတ်ပေးရန်
+        if tracker_key in admin_msg_tracker:
+            for admin_id, msg_id in admin_msg_tracker[tracker_key].items():
+                try:
+                    await bot.edit_message_text(
+                        chat_id=admin_id,
+                        message_id=msg_id,
+                        text=callback.message.text + f"\n\n❌ **[ပယ်ချလိုက်ပါပြီ - {callback.from_user.full_name}]**",
+                        reply_markup=None
+                    )
+                except:
+                    pass
+            del admin_msg_tracker[tracker_key]
+
         await callback.answer("❌ Join Request ကို ပယ်ချလိုက်ပါပြီ။")
     except Exception as e:
         print(f"ERROR in manual decline: {e}")
