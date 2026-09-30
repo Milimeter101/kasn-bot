@@ -278,57 +278,57 @@ async def process_approve_class(callback: CallbackQuery):
         print(f"ERROR: Failed to approve Online Class for user {target_user_id}: {e}")
         await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
 
-# User ဘက်မှ Join Request တင်လိုက်သည့်အခါ Admin ထံသို့ ခလုတ်ပါဝင်သော အကြောင်းကြားစာ ပို့ခြင်း
+# -------------------------------------------------------------
+# User ဘက်က Join Request တင်လိုက်တာနဲ့ Bot က အလိုအလျောက် (Auto) လက်ခံပေးပြီး စာပို့မည်။
+# -------------------------------------------------------------
 @dp.chat_join_request()
 async def handle_chat_join_request(chat_join: ChatJoinRequest):
     user = chat_join.from_user
     chat_id = chat_join.chat.id
-    
-    if str(chat_id) == VIP_CHANNEL_ID:
-        channel_name = "💎 VIP Channel"
-    elif str(chat_id) == ONLINE_CLASS_CHANNEL_ID:
-        channel_name = "📚 Online Class"
-    else:
-        channel_name = "📢 Channel"
-
-    keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[
-            [InlineKeyboardButton(text="✅ Channel ထဲသို့ လက်ခံမည် (Accept)", callback_data=f"accept_join_{chat_id}_{user.id}")]
-        ]
-    )
-
-    text = (
-        f"📩 **Join Request အသစ် ရောက်ရှိပါပြီ!**\n\n"
-        f"📌 ချန်နယ်: {channel_name}\n"
-        f"👤 အမည်: {user.full_name}\n"
-        f"🔗 Username: @{user.username if user.username else 'None'}\n"
-        f"🆔 User ID: `{user.id}`\n\n"
-        f"အောက်ပါ ခလုတ်ကို နှိပ်၍ ချန်နယ်ထဲသို့ လက်ခံနိုင်ပါသည် -"
-    )
+    target_user_id = user.id
 
     try:
-        await bot.send_message(chat_id=ADMIN_ID, text=text, reply_markup=keyboard)
-    except Exception as e:
-        print(f"ERROR: Failed to send join request to admin: {e}")
-
-# Admin က Accept ခလုတ်နှိပ်၍ ချန်နယ်ထဲသို့ အလိုအလျောက် ဝင်ခွင့်ပေးခြင်း
-@dp.callback_query(F.data.startswith("accept_join_"))
-async def process_accept_join(callback: CallbackQuery):
-    data_parts = callback.data.split("_")
-    chat_id = int(data_parts[2])
-    target_user_id = int(data_parts[3])
-
-    try:
+        # 1. ချန်နယ်ထဲသို့ ဝင်ခွင့်ကို Bot က ချက်ချင်း အလိုအလျောက် လက်ခံပေးမည်
         await bot.approve_chat_join_request(chat_id=chat_id, user_id=target_user_id)
         
-        await callback.message.edit_text(
-            text=callback.message.text + "\n\n✅ **[ဤသူ့ကို ချန်နယ်ထဲသို့ အောင်မြင်စွာ လက်ခံပြီးပါပြီ]**"
+        # 2. ဘယ်ချန်နယ်လဲဆိုတာအပေါ်မူတည်ပြီး ပို့ရမယ့်စာ သတ်မှတ်ခြင်း
+        if str(chat_id) == VIP_CHANNEL_ID:
+            channel_type_text = "VIP Channel"
+            success_message = (
+                f"🎉 ဂုဏ်ယူပါတယ်ခင်ဗျာ!\n\n"
+                f"သင့်ကို **{channel_type_text}** ထဲသို့ အောင်မြင်စွာ ထည့်သွင်းပေးလိုက်ပါပြီ။ "
+                f"အောက်မှာပေးထားတဲ့ list ကိုနှိပ်ပီး မိမိကြိုက်နှစ်သက်ရာကို ရွေးချယ်ကြည့်ရှု့နိုင်ပါပီခင်ဗျာ 👇👇👇\n\n"
+                f"📌 **လက်ရှိတင်ထားပီးသား Series များ**\n"
+                f"https://t.me/kasnseries/711"
+            )
+        elif str(chat_id) == ONLINE_CLASS_CHANNEL_ID:
+            channel_type_text = "Online Class"
+            success_message = (
+                f"🎉 ဂုဏ်ယူပါတယ်ခင်ဗျာ!\n\n"
+                f"သင့်ကို **{channel_type_text}** ထဲသို့ အောင်မြင်စွာ ထည့်သွင်းပေးလိုက်ပါပြီ။ "
+                f"video တေကိုမကျော်ဘဲ တစ်ပုဒ်ချင်းစီသေချာကြည့်ပီးလေ့လာစေချင်ပါတယ်ခင်ဗျာ။ "
+                f"နားမလည်တာရှိရင်လည်း အချိန်မရွေး လာပီးမေးမြန်းနိုင်ပါတယ် ✅"
+            )
+        else:
+            return  # အခြားချန်နယ်တွေဆိုရင် ဘာမှမလုပ်ပါ
+
+        # 3. User ထံသို့ အောင်မြင်ကြောင်း မက်ဆေ့ချ် တိုက်ရိုက်ပို့ခြင်း
+        await bot.send_message(
+            chat_id=target_user_id,
+            text=success_message
         )
-        await callback.answer("✅ User ကို ချန်နယ်ထဲသို့ အောင်မြင်စွာ လက်ခံလိုက်ပါပြီ။", show_alert=True)
+        
+        # 4. (αιρεoptional) Admin ဆီကိုလည်း ဘယ်သူဝင်လာတယ်ဆိုတာ အသိပေးချက် ပို့ချင်ရင်
+        await bot.send_message(
+            chat_id=ADMIN_ID,
+            text=f"🤖 **Auto Approved & Sent!**\n\n"
+                 f"📌 ချန်နယ်: {channel_type_text}\n"
+                 f"👤 အမည်: {user.full_name}\n"
+                 f"🆔 User ID: `{target_user_id}`"
+        )
 
     except Exception as e:
-        print(f"ERROR: Failed to approve join request: {e}")
-        await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည် (သို့) User သည် Request ကို ပြန်ဖျက်ထားပါသည်ခင်ဗျာ။", show_alert=True)
+        print(f"ERROR: Failed to auto approve join request for {target_user_id}: {e}")
 
 @dp.message(F.from_user.id == ADMIN_ID)
 async def admin_reply_handler(message: Message):
