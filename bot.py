@@ -3,7 +3,13 @@ import logging
 import os
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import Command
-from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from aiogram.types import (
+    Message, 
+    InlineKeyboardMarkup, 
+    InlineKeyboardButton, 
+    CallbackQuery,
+    ChatJoinRequest
+)
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
@@ -15,7 +21,7 @@ ADMIN_ID = 1861529838
 VIP_CHANNEL_ID = "-1002535791299"
 ONLINE_CLASS_CHANNEL_ID = "-1002667237249"
 
-# Render ကပေးတဲ့ App နာမည်ကို ယူပြီး Webhook URL ကို အလိုအလျောက် တည်ဆောက်ပေးပါမည်
+# Render Webhook URL သတ်မှတ်ခြင်း
 RENDER_EXTERNAL_URL = os.getenv("RENDER_EXTERNAL_URL")
 WEBHOOK_URL = f"{RENDER_EXTERNAL_URL}" if RENDER_EXTERNAL_URL else "https://kasn-bot-d7if.onrender.com"
 WEBHOOK_PATH = f"/bot/{TOKEN}"
@@ -223,6 +229,13 @@ async def process_approve_vip(callback: CallbackQuery):
                  f"👉 {invite_link.invite_link}"
         )
 
+        await bot.send_message(
+            chat_id=ADMIN_ID,
+            text=f"✅ **VIP Channel လင့်ခ် ပို့ပြီးပါပြီ**\n\n"
+                 f"👤 User ID: `{target_user_id}`\n"
+                 f"🔗 Link: {invite_link.invite_link}"
+        )
+
         await callback.message.edit_caption(
             caption=callback.message.caption + "\n\n✅ [VIP Channel လင့်ခ် ပို့ပြီးပါပြီ]"
         )
@@ -249,6 +262,13 @@ async def process_approve_class(callback: CallbackQuery):
                  f"👉 {invite_link.invite_link}"
         )
 
+        await bot.send_message(
+            chat_id=ADMIN_ID,
+            text=f"✅ **Online Class လင့်ခ် ပို့ပြီးပါပြီ**\n\n"
+                 f"👤 User ID: `{target_user_id}`\n"
+                 f"🔗 Link: {invite_link.invite_link}"
+        )
+
         await callback.message.edit_caption(
             caption=callback.message.caption + "\n\n✅ [Online Class လင့်ခ် ပို့ပြီးပါပြီ]"
         )
@@ -257,6 +277,58 @@ async def process_approve_class(callback: CallbackQuery):
     except Exception as e:
         print(f"ERROR: Failed to approve Online Class for user {target_user_id}: {e}")
         await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
+
+# User ဘက်မှ Join Request တင်လိုက်သည့်အခါ Admin ထံသို့ ခလုတ်ပါဝင်သော အကြောင်းကြားစာ ပို့ခြင်း
+@dp.chat_join_request()
+async def handle_chat_join_request(chat_join: ChatJoinRequest):
+    user = chat_join.from_user
+    chat_id = chat_join.chat.id
+    
+    if str(chat_id) == VIP_CHANNEL_ID:
+        channel_name = "💎 VIP Channel"
+    elif str(chat_id) == ONLINE_CLASS_CHANNEL_ID:
+        channel_name = "📚 Online Class"
+    else:
+        channel_name = "📢 Channel"
+
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="✅ Channel ထဲသို့ လက်ခံမည် (Accept)", callback_data=f"accept_join_{chat_id}_{user.id}")]
+        ]
+    )
+
+    text = (
+        f"📩 **Join Request အသစ် ရောက်ရှိပါပြီ!**\n\n"
+        f"📌 ချန်နယ်: {channel_name}\n"
+        f"👤 အမည်: {user.full_name}\n"
+        f"🔗 Username: @{user.username if user.username else 'None'}\n"
+        f"🆔 User ID: `{user.id}`\n\n"
+        f"အောက်ပါ ခလုတ်ကို နှိပ်၍ ချန်နယ်ထဲသို့ လက်ခံနိုင်ပါသည် -"
+    )
+
+    try:
+        await bot.send_message(chat_id=ADMIN_ID, text=text, reply_markup=keyboard)
+    except Exception as e:
+        print(f"ERROR: Failed to send join request to admin: {e}")
+
+# Admin က Accept ခလုတ်နှိပ်၍ ချန်နယ်ထဲသို့ အလိုအလျောက် ဝင်ခွင့်ပေးခြင်း
+@dp.callback_query(F.data.startswith("accept_join_"))
+async def process_accept_join(callback: CallbackQuery):
+    data_parts = callback.data.split("_")
+    chat_id = int(data_parts[2])
+    target_user_id = int(data_parts[3])
+
+    try:
+        await bot.approve_chat_join_request(chat_id=chat_id, user_id=target_user_id)
+        
+        await callback.message.edit_text(
+            text=callback.message.text + "\n\n✅ **[ဤသူ့ကို ချန်နယ်ထဲသို့ အောင်မြင်စွာ လက်ခံပြီးပါပြီ]**"
+        )
+        await callback.answer("✅ User ကို ချန်နယ်ထဲသို့ အောင်မြင်စွာ လက်ခံလိုက်ပါပြီ။", show_alert=True)
+
+    except Exception as e:
+        print(f"ERROR: Failed to approve join request: {e}")
+        await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည် (သို့) User သည် Request ကို ပြန်ဖျက်ထားပါသည်ခင်ဗျာ။", show_alert=True)
 
 @dp.message(F.from_user.id == ADMIN_ID)
 async def admin_reply_handler(message: Message):
