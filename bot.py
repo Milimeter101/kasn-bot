@@ -104,7 +104,9 @@ async def process_vip_channel(callback: CallbackQuery, state: FSMContext):
         "📌 [VIP Channel အတွက် ရွေးချယ်ထားပါသည်]\n"
         "📌 ဒီ Ph no တွေသာ သုံးပါတယ်။\n"
         "📌 ငွေလွဲပြီး ပြေစာပုံ ပို့ထားပေးပါခင်ဗျာ ။\n\n"
-
+        "ဆက်သွယ်ရန် 👇👇\n"
+        "@milimeterz\n"
+        "@AS273152\n\n"
         "လက်ရှိတင်ထားပြီးသား ဇာတ်လမ်းတွဲစာရင်းကြည့်ရန်👇👇👇\n"
         "https://t.me/kasnseries/711"
     )
@@ -315,6 +317,7 @@ async def process_accept_join(callback: CallbackQuery):
     target_user_id = int(data_parts[3])
 
     try:
+        # Telegram မှ User ၏ Request ကို အတည်ပြုပေးခြင်း (ချန်နယ်ထဲဝင်ခွင့်ပေးခြင်း)
         await bot.approve_chat_join_request(chat_id=chat_id, user_id=target_user_id)
         
         if str(chat_id) == VIP_CHANNEL_ID:
@@ -335,19 +338,21 @@ async def process_accept_join(callback: CallbackQuery):
                 f"နားမလည်တာရှိရင်လည်း အချိန်မရွေး လာပီးမေးမြန်းနိုင်ပါတယ် ✅"
             )
 
+        # User ထံသို့ တိုက်ရိုက် မက်ဆေ့ချ်ပို့ခြင်း
         await bot.send_message(
             chat_id=target_user_id,
             text=success_message
         )
         
+        # Admin ဆီက မက်ဆေ့ချ်ကို အောင်မြင်ကြောင်း ပြောင်းလဲခြင်း
         await callback.message.edit_text(
             text=callback.message.text + f"\n\n✅ **[ဤသူ့ကို {channel_type_text} ထဲသို့ အောင်မြင်စွာ လက်ခံပြီး User ထံ အကြောင်းကြားပြီးပါပြီ]**"
         )
-        await callback.answer("✅ User ကို ချန်နယ်ထဲသို့ လက်ခံပြီး အကြောင်းကြားပြီးပါပြီ။", show_alert=True)
+        await callback.answer(f"✅ User ကို ချန်နယ်ထဲသို့ လက်ခံပြီး အကြောင်းကြားပြီးပါပြီ။", show_alert=True)
 
     except Exception as e:
         print(f"ERROR: Failed to approve join request: {e}")
-        await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည် (သို့) User သည် Request ကို ပြန်ဖျက်ထားပါသည်ခင်ဗျာ။", show_alert=True)
+        await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
 
 @dp.message(F.from_user.id == ADMIN_ID)
 async def admin_reply_handler(message: Message):
