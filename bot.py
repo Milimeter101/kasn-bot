@@ -127,7 +127,7 @@ async def process_contact_admin(callback: CallbackQuery, state: FSMContext):
 async def process_ads_inquiry(callback: CallbackQuery, state: FSMContext):
     await state.clear()
     ads_text = (
-        "📢 **ကြော်ငြာလက်ခံမည့် ချန်နယ်များ**\n\n"
+      "📢 ကြော်ငြာလက်ခံမည့် ချန်နယ်များ\n\n"
         "@kasnreviews\n"
         "@movieblablabla\n"
         "@kasnactions\n"
@@ -145,15 +145,15 @@ async def process_ads_inquiry(callback: CallbackQuery, state: FSMContext):
         "@kasnmoviewworld\n"
         "@kasnreviews1\n"
         "@kasnreviews3\n\n"
-        "https://t.me/+jS8kwg4rG1ZkYWU1\n\n"
-        "https://t.me/+ngM9sYGvAU44NDA1\n\n"
-        "https://t.me/+CN0BI4DqMPsyNDk1\n\n"
-        "https://t.me/+laf6oHxHWklmMzE1\n\n"
-        "https://t.me/+GsVFKMJiHjJjMzE9\n\n"
-        "https://t.me/+xK8FCmgVEd5kZWNl\n\n"
-        "https://t.me/+e0g781rHsso0MWM1\n\n"
+        "https://t.me/+jS8kwg4rG1ZkYWU1\n"
+        "https://t.me/+ngM9sYGvAU44NDA1\n"
+        "https://t.me/+CN0BI4DqMPsyNDk1\n"
+        "https://t.me/+laf6oHxHWklmMzE1\n"
+        "https://t.me/+GsVFKMJiHjJjMzE9\n"
+        "https://t.me/+xK8FCmgVEd5kZWNl\n"
+        "https://t.me/+e0g781rHsso0MWM1\n"
         "https://t.me/+O10ofdYJRiNkOGU1\n\n"
-        "📢 **ကြော်ငြာလက်ခံမည့် ချန်နယ်များ (အခြား)**\n\n"
+        "ကြော်ငြာလက်ခံမည့် ချန်နယ်များ\n\n"
         "https://t.me/moviewreviews\n"
         "https://t.me/mwzkarsones\n"
         "https://t.me/mwaction\n"
@@ -165,7 +165,10 @@ async def process_ads_inquiry(callback: CallbackQuery, state: FSMContext):
         "https://t.me/+Z_5OIp2otRI3YTE1\n"
         "https://t.me/+GK1Vd9PJWpRjNmZl\n"
         "https://t.me/+-VzQ3zcPb1c1YzJl\n"
-        "https://t.me/+vAybu6lgjNdhMTdl"
+        "https://t.me/+vAybu6lgjNdhMTdl\n\n"
+        "💎 One Sub 3.5 ကျပ် ပါ\n"
+        "📌 One day one post pin ပါ\n"
+        "💬 ဆက်သွယ်ရန် = @milimeterz"
     )
     await callback.message.answer(ads_text)
     await callback.answer()
