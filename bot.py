@@ -17,13 +17,11 @@ from aiohttp import web
 
 TOKEN = os.getenv("TOKEN")
 
-# Admin ID နှစ်ယောက်စာ ထည့်သွင်းထားပါသည်
 ADMIN_IDS = [1861529838, 7130847181]
 
 VIP_CHANNEL_ID = "-1002535791299"
 ONLINE_CLASS_CHANNEL_ID = "-1002667237249"
 
-# Render Webhook URL သတ်မှတ်ခြင်း
 RENDER_EXTERNAL_URL = os.getenv("RENDER_EXTERNAL_URL")
 WEBHOOK_URL = f"{RENDER_EXTERNAL_URL}" if RENDER_EXTERNAL_URL else "https://kasn-bot-d7if.onrender.com"
 WEBHOOK_PATH = f"/bot/{TOKEN}"
@@ -186,7 +184,7 @@ async def handle_payment_screenshot(message: Message, state: FSMContext):
     elif current_state == UserState.waiting_for_class_slip.state:
         purpose = "📚 ဝယ်ယူသည့်အမျိုးအစား: Online Class"
     else:
-        purpose = "❓ ဝယ်ယူသည့်အမျိုးအစား: မသတ်မှတ်ရသေးပါ (သို့မဟုတ် /start မနှိပ်ဘဲ ပို့ထားခြင်း)"
+        purpose = "❓ ဝယ်ယူသည့်အမျိုးအစား: မသတ်မှတ်ရသေးပါ"
 
     user_info = f"📩 ငွေလွဲပြေစာ အသစ်ရောက်ရှိပါပြီ!\n\n" \
                 f"{purpose}\n" \
@@ -201,7 +199,6 @@ async def handle_payment_screenshot(message: Message, state: FSMContext):
         ]
     )
 
-    # Admin အားလုံးထံသို့ ပြေစာ တပြိုင်နက် ပို့ပေးခြင်း
     for admin_id in ADMIN_IDS:
         try:
             await bot.send_photo(
@@ -216,6 +213,7 @@ async def handle_payment_screenshot(message: Message, state: FSMContext):
     await message.answer("ကျေးဇူးတင်ပါတယ်ခင်ဗျာ 🙏 ငွေလွဲပြေစာကို Admin ထံသို့ ပို့ပေးလိုက်ပါပြီ။ Admin မှ စစ်ဆေးပြီးပါက ချန်နယ်လင့်ခ် ပို့ပေးပါမည်။")
     await state.clear()
 
+# 1. Admin ဘက်က VIP ခလုတ်နှိပ်လျှင် (လင့်ခ်သာ ပို့ပေးမည်)
 @dp.callback_query(F.data.startswith("approve_vip_"))
 async def process_approve_vip(callback: CallbackQuery):
     target_user_id = int(callback.data.split("_")[2])
@@ -226,6 +224,7 @@ async def process_approve_vip(callback: CallbackQuery):
             creates_join_request=True
         )
 
+        # User ဆီသို့ ဝင်ရန်လင့်ခ်ကိုသာ ပထမဆုံး ပို့မည်
         await bot.send_message(
             chat_id=target_user_id,
             text=f"🎉 သင်၏ VIP Channel ငွေလွဲပြေစာ အတည်ပြုပြီးပါပြီ!\n\n"
@@ -233,7 +232,6 @@ async def process_approve_vip(callback: CallbackQuery):
                  f"👉 {invite_link.invite_link}"
         )
 
-        # Admin အားလုံးဆီသို့ အကြောင်းကြားရန်
         for admin_id in ADMIN_IDS:
             try:
                 await bot.send_message(
@@ -254,6 +252,7 @@ async def process_approve_vip(callback: CallbackQuery):
         print(f"ERROR: Failed to approve VIP for user {target_user_id}: {e}")
         await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
 
+# 2. Admin ဘက်က Online Class ခလုတ်နှိပ်လျှင် (လင့်ခ်သာ ပို့ပေးမည်)
 @dp.callback_query(F.data.startswith("approve_class_"))
 async def process_approve_class(callback: CallbackQuery):
     target_user_id = int(callback.data.split("_")[2])
@@ -264,6 +263,7 @@ async def process_approve_class(callback: CallbackQuery):
             creates_join_request=True
         )
 
+        # User ဆီသို့ ဝင်ရန်လင့်ခ်ကိုသာ ပထမဆုံး ပို့မည်
         await bot.send_message(
             chat_id=target_user_id,
             text=f"🎉 သင်၏ Online Class ငွေလွဲပြေစာ အတည်ပြုပြီးပါပြီ!\n\n"
@@ -271,7 +271,6 @@ async def process_approve_class(callback: CallbackQuery):
                  f"👉 {invite_link.invite_link}"
         )
 
-        # Admin အားလုံးဆီသို့ အကြောင်းကြားရန်
         for admin_id in ADMIN_IDS:
             try:
                 await bot.send_message(
@@ -292,7 +291,7 @@ async def process_approve_class(callback: CallbackQuery):
         print(f"ERROR: Failed to approve Online Class for user {target_user_id}: {e}")
         await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
 
-# User ဘက်က Join Request တင်လိုက်တာနဲ့ အလိုအလျောက်လက်ခံပြီး စာပို့မည်
+# 3. User က လင့်ခ်ကိုနှိပ်ပြီး Join Request တင်မှသာ ချန်နယ်ထဲထည့်ပြီးကြောင်း စာပို့မည်
 @dp.chat_join_request()
 async def handle_chat_join_request(chat_join: ChatJoinRequest):
     user = chat_join.from_user
@@ -322,12 +321,12 @@ async def handle_chat_join_request(chat_join: ChatJoinRequest):
         else:
             return
 
+        # တကယ် ဝင်ရောက်လာမှသာ အောင်မြင်ကြောင်း စာပို့မည်
         await bot.send_message(
             chat_id=target_user_id,
             text=success_message
         )
         
-        # Admin အားလုံးဆီသို့ အကြောင်းကြားရန်
         for admin_id in ADMIN_IDS:
             try:
                 await bot.send_message(
