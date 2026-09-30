@@ -40,8 +40,9 @@ def get_main_menu():
             [InlineKeyboardButton(text="🎬 Free Movie Channels များကို ဝင်ရန်", callback_data="free_movies")],
             [InlineKeyboardButton(text="📚 Online Class တက်ရောက်ရန်", callback_data="online_class")],
             [InlineKeyboardButton(text="💎 VIP Channel သို့ ဝင်ရောက်ရန်", callback_data="vip_channel")],
-            [InlineKeyboardButton(text="💬 ဆက်သွယ်ရန် / Admin သို့ စကားပြောရန်", callback_data="contact_admin")],
-            [InlineKeyboardButton(text="📢 ကြော်ငြာကိစ္စဆွေးနွေးရန်", callback_data="ads_inquiry")]
+             [InlineKeyboardButton(text="📢 ကြော်ငြာကိစ္စဆွေးနွေးရန်", callback_data="ads_inquiry")],
+            [InlineKeyboardButton(text="💬 ဆက်သွယ်ရန် / Admin သို့ စကားပြောရန်", callback_data="contact_admin")]
+           
         ]
     )
     return keyboard
@@ -77,12 +78,13 @@ async def process_online_class(callback: CallbackQuery, state: FSMContext):
     
     class_text = (
         "မင်္ဂလာပါခင်ဗျာ။ စိတ်ဝင်စားပေးလို့ ကျေးဇူးပါဗျ။\n\n"
-        "ဒီသင်တန်းလေးကတော့ Telegram မှာ Movie Channel ထောင်ပြီး TikTok ကနေ လူခေါ်တာ၊ ကြော်ငြာလက်ခံပြီး ဝင်ငွေရှာတဲ့အထိ အစအဆုံး သင်ပေးထားတဲ့ Video Class လေးပါဗျ။\n\n"
+        "ဇာတ်ကားချန်နယ်တေ ထောင်ပီး အချိန်ပိုင်းဝင်ငွေ သိန်းဆယ်ချီ ရချင်တဲ့သူတေအတွက် သင့်တော်တဲ့သင်တန်းပါခင်ဗျာ\n\n"
+        "ဒီသင်တန်းလေးကတော့ Telegram မှာ Movie Channel ပေါင်းများစွာ တစ်ပြိုင်ထဲ ထောင်ပြီး TikTok ကနေ လူခေါ်တာ၊ ကြော်ငြာလက်ခံပြီး ဝင်ငွေရှာတဲ့အထိ အစအဆုံး သင်ပေးထားတဲ့ Video Class လေးပါဗျ။\n\n"
         "သင်တန်းကြေးကတော့ ၃၅,၀၀၀ ကျပ် ဖြစ်ပြီး အချိန်အကန့်အသတ်မရှိ လေ့လာနိုင်ပါတယ်။\n\n"
         "🤩 Wave - 09448835260 (Kaung Si Thu)\n"
         "🤩 Kpay - 09752828949 (Aye Sandar Moe)\n\n"
         "📌 [Online Class အတွက် ရွေးချယ်ထားပါသည်]\n"
-        "ငွေလွဲပြီးပါက ပြေစာပုံကို ယခုချတ်ထဲသို့ တိုက်ရိုက် ပို့ပေးပါခင်ဗျာ။ Admin စစ်ဆေးပြီးပါက သင်တန်းချန်နယ် ဝင်ခွင့်လင့်ခ် ပို့ပေးပါမည်။\n\n"
+        "ငွေလွဲပြီးပါက ပြေစာပုံကို ယခု Chat ထဲသို့ တိုက်ရိုက် ပို့ပေးပါခင်ဗျာ။ Admin စစ်ဆေးပြီးပါက သင်တန်းချန်နယ် ဝင်ခွင့်လင့်ခ် ပို့ပေးပါမည်။\n\n"
         "ဆက်သွယ်ရန် 👇\n"
         "@milimeterz"
     )
@@ -104,10 +106,7 @@ async def process_vip_channel(callback: CallbackQuery, state: FSMContext):
         "📌 [VIP Channel အတွက် ရွေးချယ်ထားပါသည်]\n"
         "📌 ဒီ Ph no တွေသာ သုံးပါတယ်။\n"
         "📌 ငွေလွဲပြီး ပြေစာပုံ ပို့ထားပေးပါခင်ဗျာ ။\n\n"
-        "ဆက်သွယ်ရန် 👇👇\n"
-        "@milimeterz\n"
-        "@AS273152\n\n"
-        "လက်ရှိတင်ထားပြီးသား ဇာတ်လမ်းတွဲစာရင်းကြည့်ရန်👇👇👇\n"
+        "လက်ရှိတင်ထားပြီးသား ဇာတ်လမ်းတွဲစာရင်းကြည့်ရန်👇👇👇\n"
         "https://t.me/kasnseries/711"
     )
     await callback.message.answer(vip_text)
@@ -118,7 +117,7 @@ async def process_contact_admin(callback: CallbackQuery, state: FSMContext):
     await state.clear()
     text = (
         "💬 Admin သို့ တိုက်ရိုက်ဆက်သွယ်ရန်:\n\n"
-        "အဆင်မပြေတာလေးများရှိပါက Admin ကို တိုက်ရိုက်ဆက်သွယ်နိုင်ပါသည် -\n"
+        "အဆင်မပြေတာလေးများရှိပါက Admin ကို တိုက်ရိုက်ဆက်သွယ်နိုင်ပါတယ် -\n"
         "👉 @milimeterz"
     )
     await callback.message.answer(text)
@@ -127,7 +126,47 @@ async def process_contact_admin(callback: CallbackQuery, state: FSMContext):
 @dp.callback_query(F.data == "ads_inquiry")
 async def process_ads_inquiry(callback: CallbackQuery, state: FSMContext):
     await state.clear()
-    ads_text = "📢 ကြော်ငြာလက်ခံမည့် ချန်နယ်များ အချက်အလက်များ..."
+    ads_text = (
+        "📢 **ကြော်ငြာလက်ခံမည့် ချန်နယ်များ**\n\n"
+        "@kasnreviews\n"
+        "@movieblablabla\n"
+        "@kasnactions\n"
+        "@indiamovieslovers\n"
+        "@kasnseries\n"
+        "@kasncartoon\n"
+        "@horrorcrazymalay\n"
+        "@myintmyatkar\n"
+        "@romanticloverkasn\n"
+        "@japankaronlykasn\n"
+        "@onlyin18kasn\n"
+        "@fullkarkyichilar\n"
+        "@allkarkyimalar\n"
+        "@pornworldkasn1\n"
+        "@kasnmoviewworld\n"
+        "@kasnreviews1\n"
+        "@kasnreviews3\n\n"
+        "https://t.me/+jS8kwg4rG1ZkYWU1\n\n"
+        "https://t.me/+ngM9sYGvAU44NDA1\n\n"
+        "https://t.me/+CN0BI4DqMPsyNDk1\n\n"
+        "https://t.me/+laf6oHxHWklmMzE1\n\n"
+        "https://t.me/+GsVFKMJiHjJjMzE9\n\n"
+        "https://t.me/+xK8FCmgVEd5kZWNl\n\n"
+        "https://t.me/+e0g781rHsso0MWM1\n\n"
+        "https://t.me/+O10ofdYJRiNkOGU1\n\n"
+        "📢 **ကြော်ငြာလက်ခံမည့် ချန်နယ်များ (အခြား)**\n\n"
+        "https://t.me/moviewreviews\n"
+        "https://t.me/mwzkarsones\n"
+        "https://t.me/mwaction\n"
+        "https://t.me/mwromantic\n"
+        "https://t.me/mvonlyin18\n"
+        "https://t.me/vivamaxmw\n"
+        "https://t.me/mwjapankar\n"
+        "https://t.me/mvloecar\n"
+        "https://t.me/+Z_5OIp2otRI3YTE1\n"
+        "https://t.me/+GK1Vd9PJWpRjNmZl\n"
+        "https://t.me/+-VzQ3zcPb1c1YzJl\n"
+        "https://t.me/+vAybu6lgjNdhMTdl"
+    )
     await callback.message.answer(ads_text)
     await callback.answer()
 
@@ -296,7 +335,7 @@ async def process_manual_approve(callback: CallbackQuery):
             success_message = (
                 "🎉 ဂုဏ်ယူပါတယ်ခင်ဗျာ!\n\n"
                 "သင့်ကို **VIP Channel** ထဲသို့ အောင်မြင်စွာ ထည့်သွင်းပေးလိုက်ပါပြီ။ "
-                "အောက်မှာပေးထားတဲ့ list ကိုနှိပ်ပီး မိမိကြိုက်နှစ်သက်ရာကို ရွေးချယ်ကြည့်ရှု့နိုင်ပါပီခင်ဗျာ 👇👇👇\n\n"
+                "အောက်မှာပေးထားတဲ့ list ကိုနှိပ်ပီး မိမိကြိုက်နှစ်သက်ရာကို ရွေးချယ်ကြည့်ရှု့နိုင်ပါပီခင်ဗျာ 👇👇👇\n\n"
                 "📌 **လက်ရှိတင်ထားပီးသား Series များ**\n"
                 "https://t.me/kasnseries/711"
             )
@@ -304,7 +343,7 @@ async def process_manual_approve(callback: CallbackQuery):
             success_message = (
                 "🎉 ဂုဏ်ယူပါတယ်ခင်ဗျာ!\n\n"
                 "သင့်ကို **Online Class** ထဲသို့ အောင်မြင်စွာ ထည့်သွင်းပေးလိုက်ပါပြီ။ "
-                "video တေကိုမကျော်ဘဲ တစ်ပုဒ်ချင်းစီသေချာကြည့်ပီးလေ့လာစေချင်ပါတယ်ခင်ဗျာ။ "
+                "video တေကိုမကျော်ဘဲ တစ်ပုဒ်ချင်းစီသေချာကြည့်ပီးလေ့လာစေချင်ပါတယ်ခင်ဗျာ။ "
                 "နားမလည်တာရှိရင်လည်း အချိန်မရွေး လာပီးမေးမြန်းနိုင်ပါတယ် ✅"
             )
 
