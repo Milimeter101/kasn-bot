@@ -77,30 +77,12 @@ async def process_online_class(callback: CallbackQuery, state: FSMContext):
     
     class_text = (
         "မင်္ဂလာပါခင်ဗျာ။ စိတ်ဝင်စားပေးလို့ ကျေးဇူးပါဗျ။\n\n"
-        "ဇာတ်ကားချန်နယ်တေ ထောင်ပီး အချိန်ပိုင်းဝင်ငွေ သိန်း ဆယ်ချီ ရချင်တဲ့သူတေအတွက်
-သင့်တော်တဲ့သင်တန်းပါခင်ဗျာ
-
-Telegram Channel စထောင်တာကနေအစ Tikok မှာ movie Poster တေတင်ပီး edit တဲ့အထ် အစအဆုံးပါပီး အချိန်အကန့်သတ်မရှ် ဝင်ရောက်လေ့လာလို့ရတဲ့ video class ပါခင်ဗျာ
-
-
-သင်တန်းမှာပါမဲ့အရာတေကတော့
-
- - Japan Region အကောင့်ဖွင့်နည်း
--Movie Channel Owner တစ်ယောက်သိသင့်သိထိုက်တဲ့အရာများ
--Movie Channel ပေါင်းများစွာကို တစ်ပြိုင်ထဲ runနည်း
--Copyright နဲ့ပက်သက်လို့ ဆောင်ရန်/ရှောင်ရန်များ
--Movie Poster Edit နည်း /တင်နည်း /run နည်း
--Tiktok မှာတင်ရန် သိသင့်သိထိုက်တဲ့ အရာများ
--Tiktok မှာ movie poster တေတင်ပီး Telegram ကို လူခေါ်နည်း
--ကြော်ငြာလက်ခံနည်း / စျေးဖြတ်နည်း
-
-
-
-သင်တန်းကြေး -35000 ks\n\n"
+        "ဒီသင်တန်းလေးကတော့ Telegram မှာ Movie Channel ထောင်ပြီး TikTok ကနေ လူခေါ်တာ၊ ကြော်ငြာလက်ခံပြီး ဝင်ငွေရှာတဲ့အထိ အစအဆုံး သင်ပေးထားတဲ့ Video Class လေးပါဗျ။\n\n"
+        "သင်တန်းကြေးကတော့ ၃၅,၀၀၀ ကျပ် ဖြစ်ပြီး အချိန်အကန့်အသတ်မရှိ လေ့လာနိုင်ပါတယ်။\n\n"
         "🤩 Wave - 09448835260 (Kaung Si Thu)\n"
         "🤩 Kpay - 09752828949 (Aye Sandar Moe)\n\n"
         "📌 [Online Class အတွက် ရွေးချယ်ထားပါသည်]\n"
-        "ငွေလွဲပြီးပါက ပြေစာပုံကို ယခု Chat ထဲသို့ တိုက်ရိုက် ပို့ပေးပါခင်ဗျာ။ Admin စစ်ဆေးပြီးပါက သင်တန်းချန်နယ် ဝင်ခွင့်လင့်ခ် ပို့ပေးပါမည်။\n\n"
+        "ငွေလွဲပြီးပါက ပြေစာပုံကို ယခုချတ်ထဲသို့ တိုက်ရိုက် ပို့ပေးပါခင်ဗျာ။ Admin စစ်ဆေးပြီးပါက သင်တန်းချန်နယ် ဝင်ခွင့်လင့်ခ် ပို့ပေးပါမည်။\n\n"
         "ဆက်သွယ်ရန် 👇\n"
         "@milimeterz"
     )
@@ -122,7 +104,9 @@ async def process_vip_channel(callback: CallbackQuery, state: FSMContext):
         "📌 [VIP Channel အတွက် ရွေးချယ်ထားပါသည်]\n"
         "📌 ဒီ Ph no တွေသာ သုံးပါတယ်။\n"
         "📌 ငွေလွဲပြီး ပြေစာပုံ ပို့ထားပေးပါခင်ဗျာ ။\n\n"
-    
+        "ဆက်သွယ်ရန် 👇👇\n"
+        "@milimeterz\n"
+        "@AS273152\n\n"
         "လက်ရှိတင်ထားပြီးသား ဇာတ်လမ်းတွဲစာရင်းကြည့်ရန်👇👇👇\n"
         "https://t.me/kasnseries/711"
     )
@@ -294,10 +278,7 @@ async def process_approve_class(callback: CallbackQuery):
         print(f"ERROR: Failed to approve Online Class for user {target_user_id}: {e}")
         await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
 
-# -------------------------------------------------------------
-# User ဘက်က Join Request တင်လိုက်တာနဲ့ Admin ဆီမှာ ခလုတ်ပေါ်လာမယ်။
-# Admin က 'Accept' ခလုတ်ကို နှိပ်လိုက်တာနဲ့ User ထဲကို ချန်နယ်ထဲထည့်ပေးပြီး စာချက်ချင်းပို့မယ်။
-# -------------------------------------------------------------
+# User ဘက်မှ Join Request တင်လိုက်သည့်အခါ Admin ထံသို့ ခလုတ်ပါဝင်သော အကြောင်းကြားစာ ပို့ခြင်း
 @dp.chat_join_request()
 async def handle_chat_join_request(chat_join: ChatJoinRequest):
     user = chat_join.from_user
@@ -330,6 +311,7 @@ async def handle_chat_join_request(chat_join: ChatJoinRequest):
     except Exception as e:
         print(f"ERROR: Failed to send join request to admin: {e}")
 
+# Admin က Accept ခလုတ်နှိပ်၍ ချန်နယ်ထဲသို့ အလိုအလျောက် ဝင်ခွင့်ပေးခြင်း
 @dp.callback_query(F.data.startswith("accept_join_"))
 async def process_accept_join(callback: CallbackQuery):
     data_parts = callback.data.split("_")
@@ -337,42 +319,16 @@ async def process_accept_join(callback: CallbackQuery):
     target_user_id = int(data_parts[3])
 
     try:
-        # Telegram မှ User ၏ Request ကို အတည်ပြုပေးခြင်း (ချန်နယ်ထဲဝင်ခွင့်ပေးခြင်း)
         await bot.approve_chat_join_request(chat_id=chat_id, user_id=target_user_id)
         
-        if str(chat_id) == VIP_CHANNEL_ID:
-            channel_type_text = "VIP Channel"
-            success_message = (
-                f"🎉 ဂုဏ်ယူပါတယ်ခင်ဗျာ!\n\n"
-                f"သင့်ကို **{channel_type_text}** ထဲသို့ အောင်မြင်စွာ ထည့်သွင်းပေးလိုက်ပါပြီ။ "
-                f"အောက်မှာပေးထားတဲ့ list ကိုနှိပ်ပီး မိမိကြိုက်နှစ်သက်ရာကို ရွေးချယ်ကြည့်ရှု့နိုင်ပါပီခင်ဗျာ 👇👇👇\n\n"
-                f"📌 **လက်ရှိတင်ထားပီးသား Series များ**\n"
-                f"https://t.me/kasnseries/711"
-            )
-        else:
-            channel_type_text = "Online Class"
-            success_message = (
-                f"🎉 ဂုဏ်ယူပါတယ်ခင်ဗျာ!\n\n"
-                f"သင့်ကို **{channel_type_text}** ထဲသို့ အောင်မြင်စွာ ထည့်သွင်းပေးလိုက်ပါပြီ။ "
-                f"video တေကိုမကျော်ဘဲ တစ်ပုဒ်ချင်းစီသေချာကြည့်ပီးလေ့လာစေချင်ပါတယ်ခင်ဗျာ။ "
-                f"နားမလည်တာရှိရင်လည်း အချိန်မရွေး လာပီးမေးမြန်းနိုင်ပါတယ် ✅"
-            )
-
-        # User ထံသို့ အောင်မြင်ကြောင်း စာတိုက်ရိုက်ပို့ခြင်း
-        await bot.send_message(
-            chat_id=target_user_id,
-            text=success_message
-        )
-        
-        # Admin ဆီက မက်ဆေ့ချ်ကို အောင်မြင်ကြောင်း ပြောင်းလဲခြင်း
         await callback.message.edit_text(
-            text=callback.message.text + f"\n\n✅ **[ဤသူ့ကို {channel_type_text} ထဲသို့ အောင်မြင်စွာ လက်ခံပြီး User ထံ အကြောင်းကြားပြီးပါပြီ]**"
+            text=callback.message.text + "\n\n✅ **[ဤသူ့ကို ချန်နယ်ထဲသို့ အောင်မြင်စွာ လက်ခံပြီးပါပြီ]**"
         )
-        await callback.answer(f"✅ User ကို ချန်နယ်ထဲသို့ လက်ခံပြီး အကြောင်းကြားပြီးပါပြီ။", show_alert=True)
+        await callback.answer("✅ User ကို ချန်နယ်ထဲသို့ အောင်မြင်စွာ လက်ခံလိုက်ပါပြီ။", show_alert=True)
 
     except Exception as e:
         print(f"ERROR: Failed to approve join request: {e}")
-        await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
+        await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည် (သို့) User သည် Request ကို ပြန်ဖျက်ထားပါသည်ခင်ဗျာ။", show_alert=True)
 
 @dp.message(F.from_user.id == ADMIN_ID)
 async def admin_reply_handler(message: Message):
