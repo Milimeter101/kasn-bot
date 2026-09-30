@@ -15,9 +15,11 @@ ADMIN_ID = 1861529838
 VIP_CHANNEL_ID = "-1002535791299"
 ONLINE_CLASS_CHANNEL_ID = "-1002667237249"
 
-WEBHOOK_URL = os.getenv("WEBHOOK_URL")
+# Render ကပေးတဲ့ App နာမည်ကို ယူပြီး Webhook URL ကို အလိုအလျောက် တည်ဆောက်ပေးပါမည်
+RENDER_EXTERNAL_URL = os.getenv("RENDER_EXTERNAL_URL")
+WEBHOOK_URL = f"{RENDER_EXTERNAL_URL}" if RENDER_EXTERNAL_URL else "https://kasn-bot-d7if.onrender.com"
 WEBHOOK_PATH = f"/bot/{TOKEN}"
-BASE_WEBHOOK_URL = f"{WEBHOOK_URL}{WEBHOOK_PATH}" if WEBHOOK_URL else ""
+BASE_WEBHOOK_URL = f"{WEBHOOK_URL}{WEBHOOK_PATH}"
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
@@ -163,7 +165,6 @@ async def process_ads_inquiry(callback: CallbackQuery, state: FSMContext):
         "📌 One day one post pin ပါ\n"
         "💬 ဆက်သွယ်ရန် = @milimeterz"
     )
-    # parse_mode ကို Markdown သို့မဟုတ် HTML မသုံးဘဲ ရိုးရိုးစာသားအတိုင်း ပို့ပေးခြင်းဖြင့် စာများ မပြတ်တောက်ဘဲ အကုန်ပေါ်စေရန်
     await callback.message.answer(ads_text)
     await callback.answer()
 
