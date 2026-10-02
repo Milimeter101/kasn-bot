@@ -32,41 +32,41 @@ dp = Dispatcher()
 
 admin_msg_tracker = {}
 
-# အကိုပေးထားသော Link အသစ်များနှင့် Update လုပ်ထားသော ချန်နယ်များ စာရင်း
+# အကိုပေးထားသော Public နှင့် Private (ID ထည့်သွင်းပြီး) ချန်နယ်များ စာရင်း
 ADS_CHANNELS = [
-    {"name": "@kasnreviews", "subs": 5000},
-    {"name": "@movieblablabla", "subs": 4200},
-    {"name": "@kasnactions", "subs": 3800},
-    {"name": "@indiamovieslovers", "subs": 6000},
-    {"name": "@kasnseries", "subs": 12000},
-    {"name": "@kasncartoon", "subs": 3000},
-    {"name": "@horrorcrazymalay", "subs": 2500},
-    {"name": "@myintmyatkar", "subs": 4100},
-    {"name": "@romanticloverkasn", "subs": 3500},
-    {"name": "@japankaronlykasn", "subs": 2900},
-    {"name": "@onlyin18kasn", "subs": 8000},
-    {"name": "@fullkarkyichilar", "subs": 4500},
-    {"name": "@allkarkyimalar", "subs": 3900},
-    {"name": "@pornworldkasn1", "subs": 9500},
-    {"name": "@kasnmoviewworld", "subs": 5200},
-    {"name": "@kasnreviews1", "subs": 3100},
-    {"name": "@kasnreviews3", "subs": 2800},
-    {"name": "https://t.me/+jS8kwg4rG1ZkYWU1", "subs": 2000},
-    {"name": "https://t.me/+ngM9sYGvAU44NDA1", "subs": 2200},
-    {"name": "https://t.me/+laf6oHxHWklmMzE1", "subs": 1800},
-    {"name": "https://t.me/+xK8FCmgVEd5kZWNl", "subs": 2700},
-    {"name": "https://t.me/+e0g781rHsso0MWM1", "subs": 2400},
-    {"name": "@moviewreviews", "subs": 4600},
-    {"name": "@mwzkarsones", "subs": 3300},
-    {"name": "@mwaction", "subs": 3700},
-    {"name": "@mwromantic", "subs": 3400},
-    {"name": "@mvonlyin18", "subs": 7200},
-    {"name": "@vivamaxmw", "subs": 5800},
-    {"name": "@mwjapankar", "subs": 3100},
-    {"name": "@mvloecar", "subs": 2900},
-    {"name": "https://t.me/+Z_5OIp2otRI3YTE1", "subs": 2000},
-    {"name": "https://t.me/+GK1Vd9PJWpRjNmZl", "subs": 2300},
-    {"name": "https://t.me/+-VzQ3zcPb1c1YzJl", "subs": 1900},
+    {"name": "@kasnreviews", "id": "@kasnreviews"},
+    {"name": "@movieblablabla", "id": "@movieblablabla"},
+    {"name": "@kasnactions", "id": "@kasnactions"},
+    {"name": "@indiamovieslovers", "id": "@indiamovieslovers"},
+    {"name": "@kasnseries", "id": "@kasnseries"},
+    {"name": "@kasncartoon", "id": "@kasncartoon"},
+    {"name": "@horrorcrazymalay", "id": "@horrorcrazymalay"},
+    {"name": "@myintmyatkar", "id": "@myintmyatkar"},
+    {"name": "@romanticloverkasn", "id": "@romanticloverkasn"},
+    {"name": "@japankaronlykasn", "id": "@japankaronlykasn"},
+    {"name": "@onlyin18kasn", "id": "@onlyin18kasn"},
+    {"name": "@kasnvivamax", "id": "@kasnvivamax"},
+    {"name": "@fullkarkyichilar", "id": "@fullkarkyichilar"},
+    {"name": "@allkarkyimalar", "id": "@allkarkyimalar"},
+    {"name": "@pornworldkasn1", "id": "@pornworldkasn1"},
+    {"name": "@kasnmoviewworld", "id": "@kasnmoviewworld"},
+    {"name": "@kasnreviews1", "id": "@kasnreviews1"},
+    {"name": "@kasnreviews3", "id": "@kasnreviews3"},
+    {"name": "https://t.me/+jS8kwg4rG1ZkYWU1", "id": -1002514229884},
+    {"name": "https://t.me/+ngM9sYGvAU44NDA1", "id": -1002761097664},
+    {"name": "https://t.me/+laf6oHxHWklmMzE1", "id": -1002772827878},
+    {"name": "https://t.me/+xK8FCmgVEd5kZWNl", "id": -1002568530868},
+    {"name": "@moviewreviews", "id": "@moviewreviews"},
+    {"name": "@mwzkarsones", "id": "@mwzkarsones"},
+    {"name": "@mwaction", "id": "@mwaction"},
+    {"name": "@mwromantic", "id": "@mwromantic"},
+    {"name": "@mvonlyin18", "id": "@mvonlyin18"},
+    {"name": "@vivamaxmw", "id": "@vivamaxmw"},
+    {"name": "@mwjapankar", "id": "@mwjapankar"},
+    {"name": "@mvloecar", "id": "@mvloecar"},
+    {"name": "https://t.me/+Z_5OIp2otRI3YTE1", "id": "https://t.me/+Z_5OIp2otRI3YTE1"}, # ID မပါသေးပါက Username သို့မဟုတ် ID ထပ်ထည့်နိုင်ပါသည်
+    {"name": "https://t.me/+GK1Vd9PJWpRjNmZl", "id": -1002778825049},
+    {"name": "https://t.me/+-VzQ3zcPb1c1YzJl", "id": -1002771343903},
 ]
 
 class UserState(StatesGroup):
@@ -152,8 +152,6 @@ async def process_contact_admin(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer(text)
     await callback.answer()
 
-# --- ပထမပုံကဲ့သို့ ချန်နယ်စာရင်း သက်သက်ကို အရင်ပြခြင်း ---
-
 @dp.callback_query(F.data == "ads_inquiry")
 async def process_ads_inquiry(callback: CallbackQuery, state: FSMContext):
     await state.clear()
@@ -181,8 +179,6 @@ async def process_ads_inquiry(callback: CallbackQuery, state: FSMContext):
         
     await callback.answer()
 
-# --- ဈေးနှုန်းကြည့်ရန် ရွေးချယ်မှု မီနူးသို့ ရောက်ရှိခြင်း ---
-
 @dp.callback_query(F.data == "ads_view_menu")
 async def process_ads_view_menu(callback: CallbackQuery, state: FSMContext):
     keyboard = InlineKeyboardMarkup(
@@ -202,25 +198,21 @@ async def process_ads_view_menu(callback: CallbackQuery, state: FSMContext):
 
 @dp.callback_query(F.data == "ads_view_each")
 async def process_ads_view_each(callback: CallbackQuery, state: FSMContext):
-    await callback.message.answer("⏳ ချန်နယ်များထဲသို့ တိုက်ရိုက်ဝင်ရောက်ပြီး Subscriber အရေအတွက်များကို စစ်ဆေးနေပါပြီ ခဏစောင့်ပါ...")
+    await callback.message.answer("⏳ ချန်နယ်များ၏ Subscriber အရေအတွက်များကို တိုက်ရိုက်စစ်ဆေးနေပါပြီ ခဏစောင့်ပါ...")
     
     text = "📋 **ချန်နယ်တစ်ခုချင်းစီ၏ ကြော်ငြာကြေး (Sub × 3.5 ကျပ်)**\n\n"
     
     for idx, ch in enumerate(ADS_CHANNELS, 1):
-        channel_identifier = ch["name"]
+        channel_identifier = ch["id"]
         subs = 0
-        
-        if channel_identifier.startswith("@"):
-            try:
-                chat = await bot.get_chat(channel_identifier)
-                subs = await bot.get_chat_member_count(chat.id)
-            except Exception:
-                subs = ch.get("subs", 0)
-        else:
-            subs = ch.get("subs", 0)
+        try:
+            subs = await bot.get_chat_member_count(channel_identifier)
+        except Exception as e:
+            print(f"Error fetching subs for {ch['name']}: {e}")
+            subs = 0
             
         price = subs * 3.5
-        text += f"{idx}. {channel_identifier} ({subs:,} Subs) - `{price:,.1f}` ကျပ်\n"
+        text += f"{idx}. {ch['name']} ({subs:,} Subs) - `{price:,.1f}` ကျပ်\n"
         
     text += f"\n📌 one day one post pin ပါ။\n"
     text += f"💬 ဆက်သွယ်ရန် - @milimeterz"
@@ -240,30 +232,24 @@ async def process_ads_view_total(callback: CallbackQuery, state: FSMContext):
     
     total_subs = 0
     for ch in ADS_CHANNELS:
-        channel_identifier = ch["name"]
-        if channel_identifier.startswith("@"):
-            try:
-                chat = await bot.get_chat(channel_identifier)
-                subs = await bot.get_chat_member_count(chat.id)
-                total_subs += subs
-            except:
-                total_subs += ch.get("subs", 0)
-        else:
-            total_subs += ch.get("subs", 0)
+        channel_identifier = ch["id"]
+        try:
+            subs = await bot.get_chat_member_count(channel_identifier)
+            total_subs += subs
+        except Exception as e:
+            print(f"Error fetching subs for {ch['name']}: {e}")
             
     total_price = total_subs * 3.5
     
     text = (
         "💎 **ချန်နယ်အားလုံးပေါင်း စုစုပေါင်းကြော်ငြာကြေး**\n\n"
-        f"📊 ချန်နယ်အားလုံးရဲ့ Subscriber စုစုပေါင်း (တိုက်ရိုက်စစ်ဆေးပြီး): `{total_subs:,}` Subs\n"
+        f"📊 ချန်နယ်အားလုံးရဲ့ Subscriber စုစုပေါင်း: `{total_subs:,}` Subs\n"
         f"💰 အားလုံးပေါင်းရဲ့ ကြော်ငြာကြေး (Total Sub × 3.5): `{total_price:,.1f}` ကျပ်\n\n"
         "📌 one day one post pin ပါ။\n"
         "💬 ဆက်သွယ်ရန် - @milimeterz"
     )
     await callback.message.answer(text)
     await callback.answer("✅ စုစုပေါင်း ကြော်ငြာကြေးကို တိုက်ရိုက်တွက်ချက်ပြသပြီးပါပြီ။")
-
-# --- ငွေလွဲပြေစာနှင့် Join Request စနစ်များ ---
 
 @dp.message(F.photo)
 async def handle_payment_screenshot(message: Message, state: FSMContext):
