@@ -63,7 +63,7 @@ ADS_CHANNELS = [
     {"name": "@vivamaxmw", "id": "@vivamaxmw"},
     {"name": "@mwjapankar", "id": "@mwjapankar"},
     {"name": "@mvloecar", "id": "@mvloecar"},
-    {"name": "https://t.me/+Z_5OIp2otRI3YTE1", "id": -1002704169981},
+    {"name": "https://t.me/+Z_5OIp2otRI3YTE1", "id": "https://t.me/+Z_5OIp2otRI3YTE1"},
     {"name": "https://t.me/+GK1Vd9PJWpRjNmZl", "id": -1002778825049},
     {"name": "https://t.me/+-VzQ3zcPb1c1YzJl", "id": -1002771343903},
 ]
