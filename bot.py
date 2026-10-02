@@ -32,6 +32,7 @@ dp = Dispatcher()
 
 admin_msg_tracker = {}
 
+# အကိုပေးထားသော Public နှင့် Private (ID ထည့်သွင်းပြီး) ချန်နယ်များ စာရင်း
 ADS_CHANNELS = [
     {"name": "@kasnreviews", "id": "@kasnreviews"},
     {"name": "@movieblablabla", "id": "@movieblablabla"},
@@ -63,7 +64,7 @@ ADS_CHANNELS = [
     {"name": "@vivamaxmw", "id": "@vivamaxmw"},
     {"name": "@mwjapankar", "id": "@mwjapankar"},
     {"name": "@mvloecar", "id": "@mvloecar"},
-    {"name": "https://t.me/+Z_5OIp2otRI3YTE1", "id": "https://t.me/+Z_5OIp2otRI3YTE1"},
+    {"name": "https://t.me/+Z_5OIp2otRI3YTE1", "id": "https://t.me/+Z_5OIp2otRI3YTE1"}, # ID မပါသေးပါက Username သို့မဟုတ် ID ထပ်ထည့်နိုင်ပါသည်
     {"name": "https://t.me/+GK1Vd9PJWpRjNmZl", "id": -1002778825049},
     {"name": "https://t.me/+-VzQ3zcPb1c1YzJl", "id": -1002771343903},
 ]
@@ -213,7 +214,7 @@ async def process_ads_view_each(callback: CallbackQuery, state: FSMContext):
         price = subs * 3.5
         text += f"{idx}. {ch['name']} ({subs:,} Subs) - `{price:,.1f}` ကျပ်\n"
         
-    text += f"\n📌 one day one post pin ပါ。\n"
+    text += f"\n📌 one day one post pin ပါ။\n"
     text += f"💬 ဆက်သွယ်ရန် - @milimeterz"
     
     if len(text) > 4000:
@@ -234,8 +235,7 @@ async def process_ads_view_total(callback: CallbackQuery, state: FSMContext):
         channel_identifier = ch["id"]
         try:
             subs = await bot.get_chat_member_count(channel_identifier)
-            if subs > 0:
-                total_subs += subs
+            total_subs += subs
         except Exception as e:
             print(f"Error fetching subs for {ch['name']}: {e}")
             
