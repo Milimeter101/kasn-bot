@@ -205,7 +205,7 @@ async def process_ads_view_each(callback: CallbackQuery, state: FSMContext):
         channel_identifier = ch["id"]
         subs = 0
         
-        # နံပါတ် 31 အတွက် Default Sub (77,460) ကို တိုက်ရိုက်သုံးရန်
+        # နံပါတ် 31 အတွက် သီးသန့် Default Sub သုံးရန်
         if channel_identifier == -1002704169981:
             subs = 77460
         else:
@@ -218,7 +218,7 @@ async def process_ads_view_each(callback: CallbackQuery, state: FSMContext):
         price = subs * 3.5
         text += f"{idx}. {ch['name']} ({subs:,} Subs) - `{price:,.1f}` ကျပ်\n"
         
-    text += f"\n📌 one day one post pin ပါ။\n"
+    text += f"\n📌 one day one post pin ပါ。\n"
     text += f"💬 ဆက်သွယ်ရန် - @milimeterz"
     
     if len(text) > 4000:
@@ -239,7 +239,7 @@ async def process_ads_view_total(callback: CallbackQuery, state: FSMContext):
         channel_identifier = ch["id"]
         subs = 0
         
-        # နံပါတ် 31 အတွက် Default Sub (77,460) ကို တိုက်ရိုက်သုံးရန်
+        # နံပါတ် 31 အတွက် သီးသန့် Default Sub သုံးရန်
         if channel_identifier == -1002704169981:
             subs = 77460
         else:
@@ -249,8 +249,7 @@ async def process_ads_view_total(callback: CallbackQuery, state: FSMContext):
                 print(f"Error fetching subs for {ch['name']}: {e}")
                 subs = 0
                 
-        if subs > 0:
-            total_subs += subs
+        total_subs += subs
             
     total_price = total_subs * 3.5
     
