@@ -32,7 +32,6 @@ dp = Dispatcher()
 
 admin_msg_tracker = {}
 
-# အကိုပေးထားသော Public နှင့် Private (ID အမှန်များထည့်သွင်းထားသော) ချန်နယ်များ စာရင်း
 ADS_CHANNELS = [
     {"name": "@kasnreviews", "id": "@kasnreviews"},
     {"name": "@movieblablabla", "id": "@movieblablabla"},
@@ -572,7 +571,12 @@ async def main():
     
     print(f"Webhook Bot started on port {port}...")
     
-    asyncio.Event().wait()
+    # ဤနေရာတွင် await ထည့်ပေးလိုက်ပါသည်
+    await asyncio.Event().wait()
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    finally:
+        # Session ပိတ်ရန် ဖြည့်စွက်ခြင်း
+        asyncio.run(bot.session.close())
