@@ -32,7 +32,6 @@ dp = Dispatcher()
 
 admin_msg_tracker = {}
 
-# အကိုပေးထားသော Public နှင့် Private (ID ထည့်သွင်းပြီး) ချန်နယ်များ စာရင်း
 ADS_CHANNELS = [
     {"name": "@kasnreviews", "id": "@kasnreviews"},
     {"name": "@movieblablabla", "id": "@movieblablabla"},
@@ -64,7 +63,7 @@ ADS_CHANNELS = [
     {"name": "@vivamaxmw", "id": "@vivamaxmw"},
     {"name": "@mwjapankar", "id": "@mwjapankar"},
     {"name": "@mvloecar", "id": "@mvloecar"},
-    {"name": "https://t.me/+Z_5OIp2otRI3YTE1", "id": "https://t.me/+Z_5OIp2otRI3YTE1"}, # ID မပါသေးပါက Username သို့မဟုတ် ID ထပ်ထည့်နိုင်ပါသည်
+    {"name": "https://t.me/+Z_5OIp2otRI3YTE1", "id": -1002704169981},
     {"name": "https://t.me/+GK1Vd9PJWpRjNmZl", "id": -1002778825049},
     {"name": "https://t.me/+-VzQ3zcPb1c1YzJl", "id": -1002771343903},
 ]
@@ -76,11 +75,11 @@ class UserState(StatesGroup):
 def get_main_menu():
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="🎬 Free Movie Channels များကို ဝင်ရန်", callback_data="free_movies")],
-            [InlineKeyboardButton(text="📚 Online Class တက်ရောက်ရန်", callback_data="online_class")],
-            [InlineKeyboardButton(text="💎 VIP Channel သို့ ဝင်ရောက်ရန်", callback_data="vip_channel")],
-            [InlineKeyboardButton(text="📢 ကြော်ငြာစုံစမ်းဆွေးနွေးရန်", callback_data="ads_inquiry")],
-            [InlineKeyboardButton(text="💬 ဆက်သွယ်ရန် / Admin သို့ စကားပြောရန်", callback_data="contact_admin")]
+            [InlineKeyboardButton(text="Free Movie Channels များသို့ ဝင်ရန်", callback_data="free_movies")],
+            [InlineKeyboardButton(text="Online Class တက်ရောက်ရန်", callback_data="online_class")],
+            [InlineKeyboardButton(text="VIP Channel သို့ ဝင်ရောက်ရန်", callback_data="vip_channel")],
+            [InlineKeyboardButton(text="ကြော်ငြာစုံစမ်းဆွေးနွေးရန်", callback_data="ads_inquiry")],
+            [InlineKeyboardButton(text="ဆက်သွယ်ရန် / Admin သို့ စကားပြောရန်", callback_data="contact_admin")]
         ]
     )
     return keyboard
@@ -89,12 +88,12 @@ def get_main_menu():
 async def cmd_start(message: Message, state: FSMContext):
     await state.clear()
     welcome_text = (
-        "မင်္ဂလာပါခင်ဗျာ 👋\n"
+        "မင်္ဂလာပါခင်ဗျာ။\n"
         "KASN Movie Platform မှ ကြိုဆိုပါတယ်။\n\n"
-        "📌 အသုံးပြုပုံ လမ်းညွှန်ချက် (FAQ):\n"
-        "• VIP Channel ဝင်လိုပါက နှိပ်ပြီး ငွေလွဲကာ ပြေစာပုံ ပို့ပေးပါ။\n"
+        "အသုံးပြုပုံ လမ်းညွှန်ချက် (FAQ):\n"
+        "• VIP Channel ဝင်လိုပါက နှိပ်ပြီး ငွေလွှဲကာ ပြေစာပုံ ပို့ပေးပါ။\n"
         "• Online Class တက်လိုပါက အချက်အလက်ကြည့်ပြီး ပြေစာပုံ ပို့ပေးပါ။\n"
-        "• ကြော်ငြာထည့်လိုပါက ကြော်ငြာစုံစမ်းဆွေးနွေးရန် ကို နှိပ်နိုင်ပါသည်။\n\n"
+        "• ကြော်ငြာထည့်လိုပါက ကြော်ငြာစုံစမ်းဆွေးနွေးရန် ကို နှိပ်နိုင်ပါတယ်။\n\n"
         "အောက်ပါတို့အနက်မှ လိုအပ်ရာကို ရွေးချယ်နိုင်ပါတယ် -"
     )
     await message.answer(text=welcome_text, reply_markup=get_main_menu())
@@ -103,9 +102,9 @@ async def cmd_start(message: Message, state: FSMContext):
 async def process_free_movies(callback: CallbackQuery, state: FSMContext):
     await state.clear()
     text = (
-        "🎬 Free Movie Channels များ:\n\n"
+        "Free Movie Channels များ:\n\n"
         "ကျွန်ုပ်တို့ရဲ့ အခမဲ့ ရုပ်ရှင်ချန်နယ်တွေထဲကို အောက်ပါလင့်ခ်ကနေ ဝင်ရောက်နိုင်ပါတယ် -\n"
-        "👉 https://t.me/kasnreviews"
+        "https://t.me/kasnreviews"
     )
     await callback.message.answer(text)
     await callback.answer()
@@ -115,13 +114,13 @@ async def process_online_class(callback: CallbackQuery, state: FSMContext):
     await state.set_state(UserState.waiting_for_class_slip)
     class_text = (
         "မင်္ဂလာပါခင်ဗျာ။ စိတ်ဝင်စားပေးလို့ ကျေးဇူးပါဗျ။\n\n"
-        "ဇာတ်ကားချန်နယ်တေ ထောင်ပီး အချိန်ပိုင်းဝင်ငွေ သိန်းဆယ်ချီ ရချင်တဲ့သူတေအတွက် သင့်တော်တဲ့သင်တန်းပါခင်ဗျာ\n\n"
+        "ဇာတ်ကားချန်နယ်တွေ ထောင်ပြီး အချိန်ပိုင်းဝင်ငွေ သိန်းဆယ်ချီ ရချင်တဲ့သူတွေအတွက် သင့်တော်တဲ့သင်တန်းပါခင်ဗျာ။\n\n"
         "သင်တန်းကြေးကတော့ ၃၅,၀၀၀ ကျပ် ဖြစ်ပြီး အချိန်အကန့်အသတ်မရှိ လေ့လာနိုင်ပါတယ်။\n\n"
-        "🤩 Wave - 09448835260 (Kaung Si Thu)\n"
-        "🤩 Kpay - 09752828949 (Aye Sandar Moe)\n\n"
-        "📌 [Online Class အတွက် ရွေးချယ်ထားပါသည်]\n"
-        "ငွေလွဲပြီးပါက ပြေစာပုံကို ယခု Chat ထဲသို့ တိုက်ရိုက် ပို့ပေးပါခင်ဗျာ။\n\n"
-        "ဆက်သွယ်ရန် 👇\n"
+        "• Wave - 09448835260 (Kaung Si Thu)\n"
+        "• Kpay - 09752828949 (Aye Sandar Moe)\n\n"
+        "[Online Class အတွက် ရွေးချယ်ထားပါသည်]\n"
+        "ငွေလွှဲပြီးပါက ပြေစာပုံကို ယခု Chat ထဲသို့ တိုက်ရိုက် ပို့ပေးပါခင်ဗျာ။\n\n"
+        "ဆက်သွယ်ရန် -\n"
         "@milimeterz"
     )
     await callback.message.answer(class_text)
@@ -131,12 +130,12 @@ async def process_online_class(callback: CallbackQuery, state: FSMContext):
 async def process_vip_channel(callback: CallbackQuery, state: FSMContext):
     await state.set_state(UserState.waiting_for_vip_slip)
     vip_text = (
-        "မန်ဘာဝင်ရတာပါအကို series တွေက ကျန်တာတွေက မလိုပါဘူးဗျ မန်ဘာကြေးကသတ်မှတ်ထားတာမရှိဘဲ...\n\n"
+        "မန်ဘာဝင်ရတာပါအကို၊ series တွေက ကျန်တာတွေက မလိုပါဘူးဗ်၊ မန်ဘာကြေးက သတ်မှတ်ထားတာမရှိဘဲ...\n\n"
         "5000 က စလို့ စေတနာရှိသလောက် အက်မင်ကို Support ပေးလို့ရပါတယ်...\n\n"
-        "🤩 Wave - 09448835260 (Kaung Si Thu)\n"
-        "🤩 Kpay - 09752828949 (Aye Sandar Moe)\n\n"
-        "📌 [VIP Channel အတွက် ရွေးချယ်ထားပါသည်]\n"
-        "ငွေလွဲပြီး ပြေစာပုံ ပို့ထားပေးပါခင်ဗျာ ။"
+        "• Wave - 09448835260 (Kaung Si Thu)\n"
+        "• Kpay - 09752828949 (Aye Sandar Moe)\n\n"
+        "[VIP Channel အတွက် ရွေးချယ်ထားပါသည်]\n"
+        "ငွေလွှဲပြီး ပြေစာပုံ ပို့ထားပေးပါခင်ဗျာ။"
     )
     await callback.message.answer(vip_text)
     await callback.answer()
@@ -145,9 +144,9 @@ async def process_vip_channel(callback: CallbackQuery, state: FSMContext):
 async def process_contact_admin(callback: CallbackQuery, state: FSMContext):
     await state.clear()
     text = (
-        "💬 Admin သို့ တိုက်ရိုက်ဆက်သွယ်ရန်:\n\n"
+        "Admin သို့ တိုက်ရိုက်ဆက်သွယ်ရန်:\n\n"
         "အဆင်မပြေတာလေးများရှိပါက Admin ကို တိုက်ရိုက်ဆက်သွယ်နိုင်ပါတယ် -\n"
-        "👉 @milimeterz"
+        "@milimeterz"
     )
     await callback.message.answer(text)
     await callback.answer()
@@ -156,7 +155,7 @@ async def process_contact_admin(callback: CallbackQuery, state: FSMContext):
 async def process_ads_inquiry(callback: CallbackQuery, state: FSMContext):
     await state.clear()
     
-    text = "📢 **ကြော်ငြာလက်ခံမည့် ချန်နယ်များ**\n\n"
+    text = "ကြော်ငြာလက်ခံမည့် ချန်နယ်များ\n\n"
     for ch in ADS_CHANNELS:
         text += f"{ch['name']}\n"
         
@@ -165,7 +164,7 @@ async def process_ads_inquiry(callback: CallbackQuery, state: FSMContext):
         
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="➡ ကြော်ငြာဈေးနှုန်း ဆက်လက်ကြည့်ရှုရန်", callback_data="ads_view_menu")]
+            [InlineKeyboardButton(text="ကြော်ငြာဈေးနှုန်း ဆက်လက်ကြည့်ရှုရန်", callback_data="ads_view_menu")]
         ]
     )
     
@@ -183,12 +182,12 @@ async def process_ads_inquiry(callback: CallbackQuery, state: FSMContext):
 async def process_ads_view_menu(callback: CallbackQuery, state: FSMContext):
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="📋 တစ်ခုချင်းစီ ဈေးနှုန်းကြည့်ရန်", callback_data="ads_view_each")],
-            [InlineKeyboardButton(text="💎 ချန်နယ်အားလုံးပေါင်း Total ဈေးကြည့်ရန်", callback_data="ads_view_total")]
+            [InlineKeyboardButton(text="တစ်ခုချင်းစီ ဈေးနှုန်းကြည့်ရန်", callback_data="ads_view_each")],
+            [InlineKeyboardButton(text="ချန်နယ်အားလုံးပေါင်း Total ဈေးကြည့်ရန်", callback_data="ads_view_total")]
         ]
     )
     text = (
-        "📊 **ကြော်ငြာကြေး တွက်ချက်မှု ရွေးချယ်ရန်**\n\n"
+        "ကြော်ငြာကြေး တွက်ချက်မှု ရွေးချယ်ရန်\n\n"
         "• 1 sub = 3.5 ကျပ်\n"
         "• one day one post pin ပါ\n\n"
         "အောက်ပါတို့အနက်မှ လိုအပ်သည်ကို ရွေးချယ်ပါ -"
@@ -198,9 +197,9 @@ async def process_ads_view_menu(callback: CallbackQuery, state: FSMContext):
 
 @dp.callback_query(F.data == "ads_view_each")
 async def process_ads_view_each(callback: CallbackQuery, state: FSMContext):
-    await callback.message.answer("⏳ ချန်နယ်များ၏ Subscriber အရေအတွက်များကို တိုက်ရိုက်စစ်ဆေးနေပါပြီ ခဏစောင့်ပါ...")
+    await callback.message.answer("ချန်နယ်များ၏ Subscriber အရေအတွက်များကို တိုက်ရိုက်စစ်ဆေးနေပါပြီ ခဏစောင့်ပါ...")
     
-    text = "📋 **ချန်နယ်တစ်ခုချင်းစီ၏ ကြော်ငြာကြေး (Sub × 3.5 ကျပ်)**\n\n"
+    text = "ချန်နယ်တစ်ခုချင်းစီ၏ ကြော်ငြာကြေး (Sub x 3.5 ကျပ်)\n\n"
     
     for idx, ch in enumerate(ADS_CHANNELS, 1):
         channel_identifier = ch["id"]
@@ -214,8 +213,8 @@ async def process_ads_view_each(callback: CallbackQuery, state: FSMContext):
         price = subs * 3.5
         text += f"{idx}. {ch['name']} ({subs:,} Subs) - `{price:,.1f}` ကျပ်\n"
         
-    text += f"\n📌 one day one post pin ပါ။\n"
-    text += f"💬 ဆက်သွယ်ရန် - @milimeterz"
+    text += f"\none day one post pin ပါ။\n"
+    text += f"ဆက်သွယ်ရန် - @milimeterz"
     
     if len(text) > 4000:
         chunks = [text[i:i+4000] for i in range(0, len(text), 4000)]
@@ -224,11 +223,11 @@ async def process_ads_view_each(callback: CallbackQuery, state: FSMContext):
     else:
         await callback.message.answer(text)
         
-    await callback.answer("✅ တစ်ခုချင်းစီ၏ ဈေးနှုန်းများကို စစ်ဆေးပြသပြီးပါပြီ။")
+    await callback.answer("တစ်ခုချင်းစီ၏ ဈေးနှုန်းများကို စစ်ဆေးပြသပြီးပါပြီ။")
 
 @dp.callback_query(F.data == "ads_view_total")
 async def process_ads_view_total(callback: CallbackQuery, state: FSMContext):
-    await callback.message.answer("⏳ ချန်နယ်အားလုံး၏ Subscriber စုစုပေါင်းကို တိုက်ရိုက်တွက်ချက်နေပါပြီ ခဏစောင့်ပါ...")
+    await callback.message.answer("ချန်နယ်အားလုံး၏ Subscriber စုစုပေါင်းကို တိုက်ရိုက်တွက်ချက်နေပါပြီ ခဏစောင့်ပါ...")
     
     total_subs = 0
     for ch in ADS_CHANNELS:
@@ -242,14 +241,14 @@ async def process_ads_view_total(callback: CallbackQuery, state: FSMContext):
     total_price = total_subs * 3.5
     
     text = (
-        "💎 **ချန်နယ်အားလုံးပေါင်း စုစုပေါင်းကြော်ငြာကြေး**\n\n"
-        f"📊 ချန်နယ်အားလုံးရဲ့ Subscriber စုစုပေါင်း: `{total_subs:,}` Subs\n"
-        f"💰 အားလုံးပေါင်းရဲ့ ကြော်ငြာကြေး (Total Sub × 3.5): `{total_price:,.1f}` ကျပ်\n\n"
-        "📌 one day one post pin ပါ။\n"
-        "💬 ဆက်သွယ်ရန် - @milimeterz"
+        "ချန်နယ်အားလုံးပေါင်း စုစုပေါင်းကြော်ငြာကြေး\n\n"
+        f"• ချန်နယ်အားလုံးရဲ့ Subscriber စုစုပေါင်း: `{total_subs:,}` Subs\n"
+        f"• အားလုံးပေါင်းရဲ့ ကြော်ငြာကြေး (Total Sub x 3.5): `{total_price:,.1f}` ကျပ်\n\n"
+        "one day one post pin ပါ။\n"
+        "ဆက်သွယ်ရန် - @milimeterz"
     )
     await callback.message.answer(text)
-    await callback.answer("✅ စုစုပေါင်း ကြော်ငြာကြေးကို တိုက်ရိုက်တွက်ချက်ပြသပြီးပါပြီ။")
+    await callback.answer("စုစုပေါင်း ကြော်ငြာကြေးကို တိုက်ရိုက်တွက်ချက်ပြသပြီးပါပြီ။")
 
 @dp.message(F.photo)
 async def handle_payment_screenshot(message: Message, state: FSMContext):
@@ -257,22 +256,22 @@ async def handle_payment_screenshot(message: Message, state: FSMContext):
     current_state = await state.get_state()
     
     if current_state == UserState.waiting_for_vip_slip.state:
-        purpose = "💎 ဝယ်ယူသည့်အမျိုးအစား: VIP Channel"
+        purpose = "ဝယ်ယူသည့်အမျိုးအစား: VIP Channel"
     elif current_state == UserState.waiting_for_class_slip.state:
-        purpose = "📚 ဝယ်ယူသည့်အမျိုးအစား: Online Class"
+        purpose = "ဝယ်ယူသည့်အမျိုးအစား: Online Class"
     else:
-        purpose = "❓ ဝယ်ယူသည့်အမျိုးအစား: မသတ်မှတ်ရသေးပါ"
+        purpose = "ဝယ်ယူသည့်အမျိုးအစား: မသတ်မှတ်ရသေးပါ"
 
-    user_info = f"📩 ငွေလွဲပြေစာ အသစ်ရောက်ရှိပါပြီ!\n\n" \
+    user_info = f"ငွေလွှဲပြေစာ အသစ်ရောက်ရှိလာပါပြီ!\n\n" \
                 f"{purpose}\n" \
-                f"👤 အမည်: {user.full_name}\n" \
-                f"🔗 Username: @{user.username if user.username else 'None'}\n" \
-                f"🆔 User ID: {user.id}"
+                f"အမည်: {user.full_name}\n" \
+                f"Username: @{user.username if user.username else 'None'}\n" \
+                f"User ID: {user.id}"
 
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="💎 VIP Channel သို့ ထည့်ရန်", callback_data=f"approve_vip_{user.id}")],
-            [InlineKeyboardButton(text="📚 Online Class သို့ ထည့်ရန်", callback_data=f"approve_class_{user.id}")]
+            [InlineKeyboardButton(text="VIP Channel သို့ ထည့်ရန်", callback_data=f"approve_vip_{user.id}")],
+            [InlineKeyboardButton(text="Online Class သို့ ထည့်ရန်", callback_data=f"approve_class_{user.id}")]
         ]
     )
 
@@ -291,7 +290,7 @@ async def handle_payment_screenshot(message: Message, state: FSMContext):
         except Exception as e:
             print(f"ERROR: Failed to send photo to admin {admin_id}: {e}")
 
-    await message.answer("ကျေးဇူးတင်ပါတယ်ခင်ဗျာ 🙏 ငွေလွဲပြေစာကို Admin ထံသို့ ပို့ပေးလိုက်ပါပြီ။ Admin မှ စစ်ဆေးပြီးပါက ချန်နယ်လင့်ခ် ပို့ပေးပါမည်။")
+    await message.answer("ကျေးဇူးတင်ပါတယ်ခင်ဗျာ 🙏 ငွေလွှဲပြေစာကို Admin ထံသို့ ပို့ပေးလိုက်ပါတယ်။ Admin မှ စစ်ဆေးပြီးပါက ချန်နယ်လင့်ခ် ပို့ပေးပါမည်။")
     await state.clear()
 
 @dp.callback_query(F.data.startswith("approve_vip_"))
@@ -307,18 +306,18 @@ async def process_approve_vip(callback: CallbackQuery):
 
         await bot.send_message(
             chat_id=target_user_id,
-            text=f"🎉 သင်၏ VIP Channel ငွေလွဲပြေစာ အတည်ပြုပြီးပါပြီ!\n\n"
+            text=f"သင်၏ VIP Channel ငွေလွှဲပြေစာ အတည်ပြုပြီးပါပြီ!\n\n"
                  f"VIP Channel သို့ ဝင်ရောက်ရန် အောက်ပါလင့်ခ်ကို နှိပ်ပြီး Join Request တင်ပေးပါ -\n"
-                 f"👉 {invite_link.invite_link}"
+                 f"{invite_link.invite_link}"
         )
 
         for admin_id in ADMIN_IDS:
             try:
                 await bot.send_message(
                     chat_id=admin_id,
-                    text=f"✅ **VIP Channel လင့်ခ် ပို့ပြီးပါပြီ** (ဆောင်ရွက်သူ: {callback.from_user.full_name})\n\n"
-                         f"👤 User ID: `{target_user_id}`\n"
-                         f"🔗 Link: {invite_link.invite_link}"
+                    text=f"VIP Channel လင့်ခ် ပို့ပြီးပါပြီ (ဆောင်ရွက်သူ: {callback.from_user.full_name})\n\n"
+                         f"User ID: `{target_user_id}`\n"
+                         f"Link: {invite_link.invite_link}"
                 )
             except:
                 pass
@@ -329,18 +328,18 @@ async def process_approve_vip(callback: CallbackQuery):
                     await bot.edit_message_caption(
                         chat_id=admin_id,
                         message_id=msg_id,
-                        caption=callback.message.caption + f"\n\n✅ [VIP Channel လင့်ခ် ပို့ပြီးပါပြီ ({callback.from_user.full_name})]",
+                        caption=callback.message.caption + f"\n\n[VIP Channel လင့်ခ် ပို့ပြီးပါပြီ ({callback.from_user.full_name})]",
                         reply_markup=None
                     )
                 except:
                     pass
             del admin_msg_tracker[tracker_key]
 
-        await callback.answer("✅ VIP လင့်ခ် ပို့ပြီးပါပြီ။")
+        await callback.answer("VIP လင့်ခ် ပို့ပြီးပါပြီ။")
 
     except Exception as e:
         print(f"ERROR: Failed to approve VIP for user {target_user_id}: {e}")
-        await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
+        await callback.answer(f"အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
 
 @dp.callback_query(F.data.startswith("approve_class_"))
 async def process_approve_class(callback: CallbackQuery):
@@ -355,18 +354,18 @@ async def process_approve_class(callback: CallbackQuery):
 
         await bot.send_message(
             chat_id=target_user_id,
-            text=f"🎉 သင်၏ Online Class ငွေလွဲပြေစာ အတည်ပြုပြီးပါပြီ!\n\n"
+            text=f"သင်၏ Online Class ငွေလွှဲပြေစာ အတည်ပြုပြီးပါပြီ!\n\n"
                  f"Online Class ချန်နယ်သို့ ဝင်ရောက်ရန် အောက်ပါလင့်ခ်ကို နှိပ်ပြီး Join Request တင်ပေးပါ -\n"
-                 f"👉 {invite_link.invite_link}"
+                 f"{invite_link.invite_link}"
         )
 
         for admin_id in ADMIN_IDS:
             try:
                 await bot.send_message(
                     chat_id=admin_id,
-                    text=f"✅ **Online Class လင့်ခ် ပို့ပြီးပါပြီ** (ဆောင်ရွက်သူ: {callback.from_user.full_name})\n\n"
-                         f"👤 User ID: `{target_user_id}`\n"
-                         f"🔗 Link: {invite_link.invite_link}"
+                    text=f"Online Class လင့်ခ် ပို့ပြီးပါပြီ (ဆောင်ရွက်သူ: {callback.from_user.full_name})\n\n"
+                         f"User ID: `{target_user_id}`\n"
+                         f"Link: {invite_link.invite_link}"
                 )
             except:
                 pass
@@ -377,18 +376,18 @@ async def process_approve_class(callback: CallbackQuery):
                     await bot.edit_message_caption(
                         chat_id=admin_id,
                         message_id=msg_id,
-                        caption=callback.message.caption + f"\n\n✅ [Online Class လင့်ခ် ပို့ပြီးပါပြီ ({callback.from_user.full_name})]",
+                        caption=callback.message.caption + f"\n\n[Online Class လင့်ခ် ပို့ပြီးပါပြီ ({callback.from_user.full_name})]",
                         reply_markup=None
                     )
                 except:
                     pass
             del admin_msg_tracker[tracker_key]
 
-        await callback.answer("✅ Online Class လင့်ခ် ပို့ပြီးပါပြီ။")
+        await callback.answer("Online Class လင့်ခ် ပို့ပြီးပါပြီ။")
 
     except Exception as e:
         print(f"ERROR: Failed to approve Online Class for user {target_user_id}: {e}")
-        await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
+        await callback.answer(f"အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
 
 @dp.chat_join_request()
 async def handle_chat_join_request(chat_join: ChatJoinRequest):
@@ -396,27 +395,27 @@ async def handle_chat_join_request(chat_join: ChatJoinRequest):
     chat_id = chat_join.chat.id
     
     if str(chat_id) == VIP_CHANNEL_ID:
-        channel_name = "💎 VIP Channel"
+        channel_name = "VIP Channel"
     elif str(chat_id) == ONLINE_CLASS_CHANNEL_ID:
-        channel_name = "📚 Online Class"
+        channel_name = "Online Class"
     else:
         return
 
     admin_keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             [
-                InlineKeyboardButton(text="✅ လက်ခံမည် (Approve)", callback_data=f"man_approve_{chat_id}_{user.id}"),
-                InlineKeyboardButton(text="❌ ပယ်ချမည် (Decline)", callback_data=f"man_decline_{chat_id}_{user.id}")
+                InlineKeyboardButton(text="လက်ခံမည် (Approve)", callback_data=f"man_approve_{chat_id}_{user.id}"),
+                InlineKeyboardButton(text="ပယ်ချမည် (Decline)", callback_data=f"man_decline_{chat_id}_{user.id}")
             ]
         ]
     )
 
     request_text = (
-        "📥 **ချန်နယ် Join Request အသစ် ရောက်ရှိနေပါပြီ!**\n\n"
-        f"📌 ချန်နယ်: {channel_name}\n"
-        f"👤 အမည်: {user.full_name}\n"
-        f"🔗 Username: @{user.username if user.username else 'None'}\n"
-        f"🆔 User ID: `{user.id}`"
+        "ချန်နယ် Join Request အသစ် ရောက်ရှိနေပါပြီ!\n\n"
+        f"• ချန်နယ်: {channel_name}\n"
+        f"• အမည်: {user.full_name}\n"
+        f"• Username: @{user.username if user.username else 'None'}\n"
+        f"• User ID: `{user.id}`"
     )
 
     tracker_key = f"join_{chat_id}_{user.id}"
@@ -445,18 +444,18 @@ async def process_manual_approve(callback: CallbackQuery):
 
         if str(chat_id) == VIP_CHANNEL_ID:
             success_message = (
-                "🎉 ဂုဏ်ယူပါတယ်ခင်ဗျာ!\n\n"
-                "သင့်ကို **VIP Channel** ထဲသို့ အောင်မြင်စွာ ထည့်သွင်းပေးလိုက်ပါပြီ။ "
-                "အောက်မှာပေးထားတဲ့ list ကိုနှိပ်ပီး မိမိကြိုက်နှစ်သက်ရာကို ရွေးချယ်ကြည့်ရှု့နိုင်ပါပီခင်ဗျာ 👇👇👇\n\n"
-                "📌 **လက်ရှိတင်ထားပီးသား Series များ**\n"
+                "ဂုဏ်ယူပါတယ်ခင်ဗျာ!\n\n"
+                "သင့်ကို **VIP Channel** ထဲသို့ အောင်မြင်စွာ ထည့်သွင်းပေးလိုက်ပါတယ်။ "
+                "အောက်မှာပေးထားတဲ့ list ကိုနှိပ်ပြီး မိမိကြိုက်နှစ်သက်ရာကို ရွေးချယ်ကြည့်ရှုနိုင်ပါပြီခင်ဗျာ -\n\n"
+                "လက်ရှိတင်ထားပြီးသား Series များ\n"
                 "https://t.me/kasnseries/711"
             )
         else:
             success_message = (
-                "🎉 ဂုဏ်ယူပါတယ်ခင်ဗျာ!\n\n"
-                "သင့်ကို **Online Class** ထဲသို့ အောင်မြင်စွာ ထည့်သွင်းပေးလိုက်ပါပြီ။ "
-                "video တေကိုမကျော်ဘဲ တစ်ပုဒ်ချင်းစီသေချာကြည့်ပီးလေ့လာစေချင်ပါတယ်ခင်ဗျာ။ "
-                "နားမလည်တာရှိရင်လည်း အချိန်မရွေး လာပီးမေးမြန်းနိုင်ပါတယ် ✅"
+                "ဂုဏ်ယူပါတယ်ခင်ဗျာ!\n\n"
+                "သင့်ကို **Online Class** ထဲသို့ အောင်မြင်စွာ ထည့်သွင်းပေးလိုက်ပါတယ်။ "
+                "video တွေကိုမကျော်ဘဲ တစ်ပုဒ်ချင်းစီသေချာကြည့်ပြီး လေ့လာစေချင်ပါတယ်။ "
+                "နားမလည်တာရှိရင်လည်း အချိန်မရွေး လာပြီးမေးမြန်းနိုင်ပါတယ်။"
             )
 
         await bot.send_message(chat_id=target_user_id, text=success_message)
@@ -467,18 +466,18 @@ async def process_manual_approve(callback: CallbackQuery):
                     await bot.edit_message_text(
                         chat_id=admin_id,
                         message_id=msg_id,
-                        text=callback.message.text + f"\n\n✅ **[အတည်ပြုပြီးပါပြီ - {callback.from_user.full_name}]**",
+                        text=callback.message.text + f"\n\n[အတည်ပြုပြီးပါပြီ - {callback.from_user.full_name}]",
                         reply_markup=None
                     )
                 except:
                     pass
             del admin_msg_tracker[tracker_key]
 
-        await callback.answer("✅ User ကို ချန်နယ်ထဲသို့ အောင်မြင်စွာ ထည့်သွင်းပြီး စာပို့ပြီးပါပြီ။")
+        await callback.answer("User ကို ချန်နယ်ထဲသို့ အောင်မြင်စွာ ထည့်သွင်းပြီး စာပို့ပြီးပါပြီ။")
 
     except Exception as e:
         print(f"ERROR in manual approve: {e}")
-        await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
+        await callback.answer(f"အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
 
 @dp.callback_query(F.data.startswith("man_decline_"))
 async def process_manual_decline(callback: CallbackQuery):
@@ -496,17 +495,17 @@ async def process_manual_decline(callback: CallbackQuery):
                     await bot.edit_message_text(
                         chat_id=admin_id,
                         message_id=msg_id,
-                        text=callback.message.text + f"\n\n❌ **[ပယ်ချလိုက်ပါပြီ - {callback.from_user.full_name}]**",
+                        text=callback.message.text + f"\n\n[ပယ်ချလိုက်ပါပြီ - {callback.from_user.full_name}]",
                         reply_markup=None
                     )
                 except:
                     pass
             del admin_msg_tracker[tracker_key]
 
-        await callback.answer("❌ Join Request ကို ပယ်ချလိုက်ပါပြီ။")
+        await callback.answer("Join Request ကို ပယ်ချလိုက်ပါပြီ။")
     except Exception as e:
         print(f"ERROR in manual decline: {e}")
-        await callback.answer(f"❌ အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
+        await callback.answer(f"အမှားဖြစ်ပေါ်နေပါသည်: {e}", show_alert=True)
 
 @dp.message(F.from_user.id.in_(ADMIN_IDS))
 async def admin_reply_handler(message: Message):
@@ -528,22 +527,22 @@ async def admin_reply_handler(message: Message):
                         await bot.send_photo(
                             chat_id=target_id,
                             photo=message.photo[-1].file_id,
-                            caption=f"💬 Admin မှ ပေးပို့သော မက်ဆေ့ချ်:\n\n{message.caption}" if message.caption else "💬 Admin မှ ပေးပို့သော ပုံ:"
+                            caption=f"Admin မှ ပေးပို့သော မက်ဆေ့ခ်ျ:\n\n{message.caption}" if message.caption else "Admin မှ ပေးပို့သော ပုံ:"
                         )
                     elif message.text:
                         await bot.send_message(
                             chat_id=target_id,
-                            text=f"💬 Admin မှ ပြောကြားချက်:\n\n{message.text}"
+                            text=f"Admin မှ ပြောကြားချက်:\n\n{message.text}"
                         )
                         
-                    await message.reply("✅ User ထံသို့ အောင်မြင်စွာ ပို့ပြီးပါပြီ။")
+                    await message.reply("User ထံသို့ အောင်မြင်စွာ ပို့ပြီးပါပြီ။")
                     return
         except Exception as e:
             print(f"ERROR: Admin reply failed: {e}")
-            await message.reply(f"❌ ပို့၍မရပါ။ အမှားအယွင်းရှိနေပါသည်: {e}")
+            await message.reply(f"ပို့၍မရပါ။ အမှားအယွင်းရှိနေပါသည်: {e}")
             return
             
-    await message.reply("💡 User ဆီ စာပြန်လိုပါက ပုံကို Reply လုပ်၍ စာ/ပုံ ပို့ပါ။")
+    await message.reply("User ဆီ စာပြန်လိုပါက ပုံကို Reply လုပ်၍ စာ/ပုံ ပို့ပါ။")
 
 async def on_startup(bot: Bot):
     await bot.set_webhook(BASE_WEBHOOK_URL, allowed_updates=["message", "callback_query", "chat_join_request"])
