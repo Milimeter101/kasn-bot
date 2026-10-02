@@ -32,7 +32,7 @@ dp = Dispatcher()
 
 admin_msg_tracker = {}
 
-# ချန်နယ်အမည်နှင့် Subscriber အရေအတွက် စာရင်း (sub အရေအတွက်ကို လိုသလို ပြင်နိုင်သည်)
+# ကြော်ငြာလက်ခံမည့် ချန်နယ်များ စာရင်း
 ADS_CHANNELS = [
     {"name": "@kasnreviews", "subs": 5000},
     {"name": "@movieblablabla", "subs": 4200},
@@ -51,14 +51,14 @@ ADS_CHANNELS = [
     {"name": "@kasnmoviewworld", "subs": 5200},
     {"name": "@kasnreviews1", "subs": 3100},
     {"name": "@kasnreviews3", "subs": 2800},
-    {"name": "Link Channel 1 (+jS8kw...)", "subs": 2000},
-    {"name": "Link Channel 2 (+ngM9s...)", "subs": 2200},
-    {"name": "Link Channel 3 (+CN0BI...)", "subs": 2500},
-    {"name": "Link Channel 4 (+laf6o...)", "subs": 1800},
-    {"name": "Link Channel 5 (+GsVFK...)", "subs": 3000},
-    {"name": "Link Channel 6 (+xK8FC...)", "subs": 2700},
-    {"name": "Link Channel 7 (+e0g78...)", "subs": 2400},
-    {"name": "Link Channel 8 (+O10of...)", "subs": 2100},
+    {"name": "https://t.me/+jS8kwg4rG1ZKyWU1", "subs": 2000},
+    {"name": "https://t.me/+ngM9sYGvAU44NDA1", "subs": 2200},
+    {"name": "https://t.me/+CN0BI4DqMPSyNDk1", "subs": 2500},
+    {"name": "https://t.me/+laf6oHxHWklMmZE1", "subs": 1800},
+    {"name": "https://t.me/+GsVFKMiHjJjMzE9", "subs": 3000},
+    {"name": "https://t.me/+xK8FCmgVEd5kZWNI", "subs": 2700},
+    {"name": "https://t.me/+e0g781rHsso0MWM1", "subs": 2400},
+    {"name": "https://t.me/+O10ofdYJRiNkOGU1", "subs": 2100},
     {"name": "@moviewreviews", "subs": 4600},
     {"name": "@mwzkarsones", "subs": 3300},
     {"name": "@mwaction", "subs": 3700},
@@ -67,10 +67,10 @@ ADS_CHANNELS = [
     {"name": "@vivamaxmw", "subs": 5800},
     {"name": "@mwjapankar", "subs": 3100},
     {"name": "@mvloecar", "subs": 2900},
-    {"name": "Link Channel 9 (+Z_5OI...)", "subs": 2000},
-    {"name": "Link Channel 10 (+GK1Vd...)", "subs": 2300},
-    {"name": "Link Channel 11 (+-VzQ3z...)", "subs": 1900},
-    {"name": "Link Channel 12 (+vAybu6...)", "subs": 2600},
+    {"name": "https://t.me/+Z_5OI...", "subs": 2000},
+    {"name": "https://t.me/+GK1Vd...", "subs": 2300},
+    {"name": "https://t.me/+-VzQ3z...", "subs": 1900},
+    {"name": "https://t.me/+vAybu6...", "subs": 2600},
 ]
 
 class UserState(StatesGroup):
@@ -83,7 +83,7 @@ def get_main_menu():
             [InlineKeyboardButton(text="🎬 Free Movie Channels များကို ဝင်ရန်", callback_data="free_movies")],
             [InlineKeyboardButton(text="📚 Online Class တက်ရောက်ရန်", callback_data="online_class")],
             [InlineKeyboardButton(text="💎 VIP Channel သို့ ဝင်ရောက်ရန်", callback_data="vip_channel")],
-            [InlineKeyboardButton(text="📢 ကြော်ငြာဈေး ကြည့်ရန်", callback_data="ads_inquiry")],
+            [InlineKeyboardButton(text="📢 ကြော်ငြာစုံစမ်းဆွေးနွေးရန်", callback_data="ads_inquiry")],
             [InlineKeyboardButton(text="💬 ဆက်သွယ်ရန် / Admin သို့ စကားပြောရန်", callback_data="contact_admin")]
         ]
     )
@@ -98,7 +98,7 @@ async def cmd_start(message: Message, state: FSMContext):
         "📌 အသုံးပြုပုံ လမ်းညွှန်ချက် (FAQ):\n"
         "• VIP Channel ဝင်လိုပါက နှိပ်ပြီး ငွေလွဲကာ ပြေစာပုံ ပို့ပေးပါ။\n"
         "• Online Class တက်လိုပါက အချက်အလက်ကြည့်ပြီး ပြေစာပုံ ပို့ပေးပါ။\n"
-        "• ကြော်ငြာထည့်လိုပါက ကြော်ငြာဈေး ကြည့်ရန် မီနူးတွင် ဈေးနှုန်းများ စစ်ဆေးနိုင်ပါသည်။\n\n"
+        "• ကြော်ငြာထည့်လိုပါက ကြော်ငြာစုံစမ်းဆွေးနွေးရန် ကို နှိပ်နိုင်ပါသည်။\n\n"
         "အောက်ပါတို့အနက်မှ လိုအပ်ရာကို ရွေးချယ်နိုင်ပါတယ် -"
     )
     await message.answer(text=welcome_text, reply_markup=get_main_menu())
@@ -156,11 +156,37 @@ async def process_contact_admin(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer(text)
     await callback.answer()
 
-# --- ကြော်ငြာ ဈေးနှုန်းကြည့်ရန် မီနူးအသစ် ---
+# --- အဆင့် (၁) - ပထမပုံကဲ့သို့ ချန်နယ်စာရင်း သက်သက်ကို အရင်ပြခြင်း ---
 
 @dp.callback_query(F.data == "ads_inquiry")
 async def process_ads_inquiry(callback: CallbackQuery, state: FSMContext):
     await state.clear()
+    
+    text = "📢 **ကြော်ငြာလက်ခံမည့် ချန်နယ်များ**\n\n"
+    for ch in ADS_CHANNELS:
+        text += f"{ch['name']}\n"
+        
+    # အောက်ဆုံးတွင် ဆက်သွားရန် ဈေးနှုန်းကြည့်မည့် ခလုတ်ကို ထည့်ပေးထားသည်
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="➡️️ ကြော်ငြာဈေးနှုန်း ဆက်လက်ကြည့်ရှုရန်", callback_data="ads_view_menu")]
+        ]
+    )
+    
+    if len(text) > 4000:
+        chunks = [text[i:i+4000] for i in range(0, len(text), 4000)]
+        for chunk in chunks[:-1]:
+            await callback.message.answer(chunk)
+        await callback.message.answer(chunks[-1], reply_markup=keyboard)
+    else:
+        await callback.message.answer(text, reply_markup=keyboard)
+        
+    await callback.answer()
+
+# --- အဆင့် (၂) - ဈေးနှုန်းကြည့်ရန် ရွေးချယ်မှု မီနူးသို့ ရောက်ရှိခြင်း ---
+
+@dp.callback_query(F.data == "ads_view_menu")
+async def process_ads_view_menu(callback: CallbackQuery, state: FSMContext):
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             [InlineKeyboardButton(text="📋 တစ်ခုချင်းစီ ဈေးနှုန်းကြည့်ရန်", callback_data="ads_view_each")],
@@ -168,7 +194,7 @@ async def process_ads_inquiry(callback: CallbackQuery, state: FSMContext):
         ]
     )
     text = (
-        "📢 **ကြော်ငြာဈေး ကြည့်ရန်**\n\n"
+        "📊 **ကြော်ငြာကြေး တွက်ချက်မှု ရွေးချယ်ရန်**\n\n"
         "စည်းကမ်းချက် - One day one post pin ပါ။\n"
         "အောက်ပါတို့အနက်မှ လိုအပ်သည်ကို ရွေးချယ်ပါ -"
     )
@@ -177,16 +203,29 @@ async def process_ads_inquiry(callback: CallbackQuery, state: FSMContext):
 
 @dp.callback_query(F.data == "ads_view_each")
 async def process_ads_view_each(callback: CallbackQuery, state: FSMContext):
+    await callback.message.answer("⏳ ချန်နယ်များထဲသို့ တိုက်ရိုက်ဝင်ရောက်ပြီး Subscriber အရေအတွက်များကို စစ်ဆေးနေပါပြီ ခဏစောင့်ပါ...")
+    
     text = "📋 **ချန်နယ်တစ်ခုချင်းစီ၏ ကြော်ငြာကြေး (Sub × 3.5 ကျပ်)**\n\n"
     
     for idx, ch in enumerate(ADS_CHANNELS, 1):
-        price = ch["subs"] * 3.5
-        text += f"{idx}. {ch['name']} ({ch['subs']:,} Subs) - `{price:,.1f}` ကျပ်\n"
+        channel_identifier = ch["name"]
+        subs = 0
+        
+        if channel_identifier.startswith("@"):
+            try:
+                chat = await bot.get_chat(channel_identifier)
+                subs = await bot.get_chat_member_count(chat.id)
+            except Exception:
+                subs = ch.get("subs", 0)
+        else:
+            subs = ch.get("subs", 0)
+            
+        price = subs * 3.5
+        text += f"{idx}. {channel_identifier} ({subs:,} Subs) - `{price:,.1f}` ကျပ်\n"
         
     text += f"\n📌 စည်းကမ်းချက် - One day one post pin ပါ။\n"
     text += f"💬 ဆက်သွယ်ရန် - @milimeterz"
     
-    # Telegram မက်ဆေ့ချ် အရှည်ကန့်သတ်ချက်အတွက် အပိုင်းခွဲပို့ပေးခြင်း
     if len(text) > 4000:
         chunks = [text[i:i+4000] for i in range(0, len(text), 4000)]
         for chunk in chunks:
@@ -194,22 +233,36 @@ async def process_ads_view_each(callback: CallbackQuery, state: FSMContext):
     else:
         await callback.message.answer(text)
         
-    await callback.answer("✅ တစ်ခုချင်းစီ၏ ဈေးနှုန်းများကို ပြသပြီးပါပြီ။")
+    await callback.answer("✅ တစ်ခုချင်းစီ၏ ဈေးနှုန်းများကို စစ်ဆေးပြသပြီးပါပြီ။")
 
 @dp.callback_query(F.data == "ads_view_total")
 async def process_ads_view_total(callback: CallbackQuery, state: FSMContext):
-    total_subs = sum(ch["subs"] for ch in ADS_CHANNELS)
+    await callback.message.answer("⏳ ချန်နယ်အားလုံး၏ Subscriber စုစုပေါင်းကို တိုက်ရိုက်တွက်ချက်နေပါပြီ ခဏစောင့်ပါ...")
+    
+    total_subs = 0
+    for ch in ADS_CHANNELS:
+        channel_identifier = ch["name"]
+        if channel_identifier.startswith("@"):
+            try:
+                chat = await bot.get_chat(channel_identifier)
+                subs = await bot.get_chat_member_count(chat.id)
+                total_subs += subs
+            except:
+                total_subs += ch.get("subs", 0)
+        else:
+            total_subs += ch.get("subs", 0)
+            
     total_price = total_subs * 3.5
     
     text = (
         "💎 **ချန်နယ်အားလုံးပေါင်း စုစုပေါင်းကြော်ငြာကြေး**\n\n"
-        f"📊 ချန်နယ်အားလုံးရဲ့ Subscriber စုစုပေါင်း: `{total_subs:,}` Subs\n"
+        f"📊 ချန်နယ်အားလုံးရဲ့ Subscriber စုစုပေါင်း (တိုက်ရိုက်စစ်ဆေးပြီး): `{total_subs:,}` Subs\n"
         f"💰 အားလုံးပေါင်းရဲ့ ကြော်ငြာကြေး (Total Sub × 3.5): `{total_price:,.1f}` ကျပ်\n\n"
         "📌 စည်းကမ်းချက် - One day one post pin ပါ။\n"
         "💬 ဆက်သွယ်ရန် - @milimeterz"
     )
     await callback.message.answer(text)
-    await callback.answer("✅ စုစုပေါင်း ကြော်ငြာကြေးကို တွက်ချက်ပြသပြီးပါပြီ။")
+    await callback.answer("✅ စုစုပေါင်း ကြော်ငြာကြေးကို တိုက်ရိုက်တွက်ချက်ပြသပြီးပါပြီ။")
 
 # --- ငွေလွဲပြေစာနှင့် Join Request စနစ်များ ---
 
