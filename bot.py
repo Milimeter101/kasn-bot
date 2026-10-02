@@ -32,7 +32,7 @@ dp = Dispatcher()
 
 admin_msg_tracker = {}
 
-# ကြော်ငြာလက်ခံမည့် ချန်နယ်များ စာရင်း
+# အကိုပေးထားသော Link အသစ်များနှင့် Update လုပ်ထားသော ချန်နယ်များ စာရင်း
 ADS_CHANNELS = [
     {"name": "@kasnreviews", "subs": 5000},
     {"name": "@movieblablabla", "subs": 4200},
@@ -51,14 +51,11 @@ ADS_CHANNELS = [
     {"name": "@kasnmoviewworld", "subs": 5200},
     {"name": "@kasnreviews1", "subs": 3100},
     {"name": "@kasnreviews3", "subs": 2800},
-    {"name": "https://t.me/+jS8kwg4rG1ZKyWU1", "subs": 2000},
+    {"name": "https://t.me/+jS8kwg4rG1ZkYWU1", "subs": 2000},
     {"name": "https://t.me/+ngM9sYGvAU44NDA1", "subs": 2200},
-    {"name": "https://t.me/+CN0BI4DqMPSyNDk1", "subs": 2500},
-    {"name": "https://t.me/+laf6oHxHWklMmZE1", "subs": 1800},
-    {"name": "https://t.me/+GsVFKMiHjJjMzE9", "subs": 3000},
-    {"name": "https://t.me/+xK8FCmgVEd5kZWNI", "subs": 2700},
+    {"name": "https://t.me/+laf6oHxHWklmMzE1", "subs": 1800},
+    {"name": "https://t.me/+xK8FCmgVEd5kZWNl", "subs": 2700},
     {"name": "https://t.me/+e0g781rHsso0MWM1", "subs": 2400},
-    {"name": "https://t.me/+O10ofdYJRiNkOGU1", "subs": 2100},
     {"name": "@moviewreviews", "subs": 4600},
     {"name": "@mwzkarsones", "subs": 3300},
     {"name": "@mwaction", "subs": 3700},
@@ -67,10 +64,9 @@ ADS_CHANNELS = [
     {"name": "@vivamaxmw", "subs": 5800},
     {"name": "@mwjapankar", "subs": 3100},
     {"name": "@mvloecar", "subs": 2900},
-    {"name": "https://t.me/+Z_5OI...", "subs": 2000},
-    {"name": "https://t.me/+GK1Vd...", "subs": 2300},
-    {"name": "https://t.me/+-VzQ3z...", "subs": 1900},
-    {"name": "https://t.me/+vAybu6...", "subs": 2600},
+    {"name": "https://t.me/+Z_5OIp2otRI3YTE1", "subs": 2000},
+    {"name": "https://t.me/+GK1Vd9PJWpRjNmZl", "subs": 2300},
+    {"name": "https://t.me/+-VzQ3zcPb1c1YzJl", "subs": 1900},
 ]
 
 class UserState(StatesGroup):
@@ -156,7 +152,7 @@ async def process_contact_admin(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer(text)
     await callback.answer()
 
-# --- အဆင့် (၁) - ပထမပုံကဲ့သို့ ချန်နယ်စာရင်း သက်သက်ကို အရင်ပြခြင်း ---
+# --- ပထမပုံကဲ့သို့ ချန်နယ်စာရင်း သက်သက်ကို အရင်ပြခြင်း ---
 
 @dp.callback_query(F.data == "ads_inquiry")
 async def process_ads_inquiry(callback: CallbackQuery, state: FSMContext):
@@ -166,10 +162,12 @@ async def process_ads_inquiry(callback: CallbackQuery, state: FSMContext):
     for ch in ADS_CHANNELS:
         text += f"{ch['name']}\n"
         
-    # အောက်ဆုံးတွင် ဆက်သွားရန် ဈေးနှုန်းကြည့်မည့် ခလုတ်ကို ထည့်ပေးထားသည်
+    text += "\n1 sub = 3.5 ကျပ်\n"
+    text += "one day one post pin ပါ"
+        
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="➡️️ ကြော်ငြာဈေးနှုန်း ဆက်လက်ကြည့်ရှုရန်", callback_data="ads_view_menu")]
+            [InlineKeyboardButton(text="➡ ကြော်ငြာဈေးနှုန်း ဆက်လက်ကြည့်ရှုရန်", callback_data="ads_view_menu")]
         ]
     )
     
@@ -183,7 +181,7 @@ async def process_ads_inquiry(callback: CallbackQuery, state: FSMContext):
         
     await callback.answer()
 
-# --- အဆင့် (၂) - ဈေးနှုန်းကြည့်ရန် ရွေးချယ်မှု မီနူးသို့ ရောက်ရှိခြင်း ---
+# --- ဈေးနှုန်းကြည့်ရန် ရွေးချယ်မှု မီနူးသို့ ရောက်ရှိခြင်း ---
 
 @dp.callback_query(F.data == "ads_view_menu")
 async def process_ads_view_menu(callback: CallbackQuery, state: FSMContext):
@@ -195,7 +193,8 @@ async def process_ads_view_menu(callback: CallbackQuery, state: FSMContext):
     )
     text = (
         "📊 **ကြော်ငြာကြေး တွက်ချက်မှု ရွေးချယ်ရန်**\n\n"
-        "စည်းကမ်းချက် - One day one post pin ပါ။\n"
+        "• 1 sub = 3.5 ကျပ်\n"
+        "• one day one post pin ပါ\n\n"
         "အောက်ပါတို့အနက်မှ လိုအပ်သည်ကို ရွေးချယ်ပါ -"
     )
     await callback.message.answer(text, reply_markup=keyboard)
@@ -223,7 +222,7 @@ async def process_ads_view_each(callback: CallbackQuery, state: FSMContext):
         price = subs * 3.5
         text += f"{idx}. {channel_identifier} ({subs:,} Subs) - `{price:,.1f}` ကျပ်\n"
         
-    text += f"\n📌 စည်းကမ်းချက် - One day one post pin ပါ။\n"
+    text += f"\n📌 one day one post pin ပါ။\n"
     text += f"💬 ဆက်သွယ်ရန် - @milimeterz"
     
     if len(text) > 4000:
@@ -258,7 +257,7 @@ async def process_ads_view_total(callback: CallbackQuery, state: FSMContext):
         "💎 **ချန်နယ်အားလုံးပေါင်း စုစုပေါင်းကြော်ငြာကြေး**\n\n"
         f"📊 ချန်နယ်အားလုံးရဲ့ Subscriber စုစုပေါင်း (တိုက်ရိုက်စစ်ဆေးပြီး): `{total_subs:,}` Subs\n"
         f"💰 အားလုံးပေါင်းရဲ့ ကြော်ငြာကြေး (Total Sub × 3.5): `{total_price:,.1f}` ကျပ်\n\n"
-        "📌 စည်းကမ်းချက် - One day one post pin ပါ။\n"
+        "📌 one day one post pin ပါ။\n"
         "💬 ဆက်သွယ်ရန် - @milimeterz"
     )
     await callback.message.answer(text)
