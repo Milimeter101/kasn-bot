@@ -32,7 +32,7 @@ dp = Dispatcher()
 
 admin_msg_tracker = {}
 
-# အကိုပေးထားသော Public နှင့် Private (ID ထည့်သွင်းပြီး) ချန်နယ်များ စာရင်း
+# အကိုပေးထားသော Public နှင့် Private (ID အမှန်များထည့်သွင်းထားသော) ချန်နယ်များ စာရင်း
 ADS_CHANNELS = [
     {"name": "@kasnreviews", "id": "@kasnreviews"},
     {"name": "@movieblablabla", "id": "@movieblablabla"},
@@ -64,7 +64,7 @@ ADS_CHANNELS = [
     {"name": "@vivamaxmw", "id": "@vivamaxmw"},
     {"name": "@mwjapankar", "id": "@mwjapankar"},
     {"name": "@mvloecar", "id": "@mvloecar"},
-    {"name": "https://t.me/+Z_5OIp2otRI3YTE1", "id":-1002704169981}, # ID မပါသေးပါက Username သို့မဟုတ် ID ထပ်ထည့်နိုင်ပါသည်
+    {"name": "https://t.me/+Z_5OIp2otRI3YTE1", "id": -1002704169981},
     {"name": "https://t.me/+GK1Vd9PJWpRjNmZl", "id": -1002778825049},
     {"name": "https://t.me/+-VzQ3zcPb1c1YzJl", "id": -1002771343903},
 ]
@@ -572,7 +572,7 @@ async def main():
     
     print(f"Webhook Bot started on port {port}...")
     
-    await asyncio.Event().wait()
+    asyncio.Event().wait()
 
 if __name__ == "__main__":
     asyncio.run(main())
