@@ -159,8 +159,8 @@ async def process_ads_inquiry(callback: CallbackQuery, state: FSMContext):
     for ch in ADS_CHANNELS:
         text += f"{ch['name']}\n"
         
-    text += "\n1 sub = 3.5 ကျပ်\n"
-    text += "one day one post pin ပါ"
+    text += "\n🏷️ 1 sub = 3.5 ကျပ်\n"
+    text += "✔️ one day one post pin ပါ"
         
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
@@ -213,7 +213,7 @@ async def process_ads_view_each(callback: CallbackQuery, state: FSMContext):
         price = subs * 3.5
         text += f"{idx}. {ch['name']} ({subs:,} Subs) - `{price:,.1f}` ကျပ်\n"
         
-    text += f"\n📌 one day one post pin ပါ။\n"
+    text += f"\n✔️ one day one post pin ပါ။\n"
     text += f"💬 ဆက်သွယ်ရန် - @milimeterz"
     
     if len(text) > 4000:
@@ -244,7 +244,7 @@ async def process_ads_view_total(callback: CallbackQuery, state: FSMContext):
         "💎 **ချန်နယ်အားလုံးပေါင်း စုစုပေါင်းကြော်ငြာကြေး**\n\n"
         f"📊 ချန်နယ်အားလုံးရဲ့ Subscriber စုစုပေါင်း: `{total_subs:,}` Subs\n"
         f"💰 အားလုံးပေါင်းရဲ့ ကြော်ငြာကြေး (Total Sub × 3.5): `{total_price:,.1f}` ကျပ်\n\n"
-        "📌 one day one post pin ပါ။\n"
+        "✔️ one day one post pin ပါ။\n"
         "💬 ဆက်သွယ်ရန် - @milimeterz"
     )
     await callback.message.answer(text)
@@ -571,12 +571,10 @@ async def main():
     
     print(f"Webhook Bot started on port {port}...")
     
-    # ဤနေရာတွင် await ထည့်ပေးလိုက်ပါသည်
     await asyncio.Event().wait()
 
 if __name__ == "__main__":
     try:
         asyncio.run(main())
     finally:
-        # Session ပိတ်ရန် ဖြည့်စွက်ခြင်း
         asyncio.run(bot.session.close())
