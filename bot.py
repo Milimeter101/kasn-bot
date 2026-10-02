@@ -32,6 +32,7 @@ dp = Dispatcher()
 
 admin_msg_tracker = {}
 
+# အကိုပေးထားသော လမ်းညွှန်စာရင်းအသစ်အတိုင်း ထည့်သွင်းထားပါသည်
 ADS_CHANNELS = [
     {"name": "@kasnreviews", "id": "@kasnreviews"},
     {"name": "@movieblablabla", "id": "@movieblablabla"},
@@ -205,7 +206,7 @@ async def process_ads_view_each(callback: CallbackQuery, state: FSMContext):
         channel_identifier = ch["id"]
         subs = 0
         
-        # နံပါတ် 31 အတွက် သီးသန့် Default Sub သုံးရန်
+        # အောက်ဆုံးရောက်သွားသော ID (-1002704169981) အတွက် Default Sub ကို သတ်မှတ်ပေးခြင်း
         if channel_identifier == -1002704169981:
             subs = 77460
         else:
@@ -218,7 +219,7 @@ async def process_ads_view_each(callback: CallbackQuery, state: FSMContext):
         price = subs * 3.5
         text += f"{idx}. {ch['name']} ({subs:,} Subs) - `{price:,.1f}` ကျပ်\n"
         
-    text += f"\n📌 one day one post pin ပါ。\n"
+    text += f"\n📌 one day one post pin ပါ။\n"
     text += f"💬 ဆက်သွယ်ရန် - @milimeterz"
     
     if len(text) > 4000:
@@ -239,7 +240,7 @@ async def process_ads_view_total(callback: CallbackQuery, state: FSMContext):
         channel_identifier = ch["id"]
         subs = 0
         
-        # နံပါတ် 31 အတွက် သီးသန့် Default Sub သုံးရန်
+        # အောက်ဆုံးရောက်သွားသော ID (-1002704169981) အတွက် Default Sub ကို သတ်မှတ်ပေးခြင်း
         if channel_identifier == -1002704169981:
             subs = 77460
         else:
