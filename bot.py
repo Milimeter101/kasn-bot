@@ -113,7 +113,6 @@ def get_main_menu():
             [InlineKeyboardButton(text="📚 Online Class တက်ရောက်ရန်", callback_data="online_class")],
             [InlineKeyboardButton(text="💎 VIP Channel သို့ ဝင်ရောက်ရန်", callback_data="vip_channel")],
             [InlineKeyboardButton(text="⭐ Telegram Premium ဝယ်ယူရန်", url="https://t.me/guarantee_seller_mm")],
-            [InlineKeyboardButton(text="📢 ကြော်ငြာစုံစမ်းဆွေးနွေးရန်", callback_data="ads_inquiry")],
             [InlineKeyboardButton(text="💬 ဆက်သွယ်ရန် / Admin သို့ စကားပြောရန်", callback_data="contact_admin")]
         ]
     )
